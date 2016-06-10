@@ -1,18 +1,18 @@
 {
   "name": "onlydata",
-  "version": "0.0.1-alpha",
-  "description": "a simple data serialization language",
+  "version": "0.0.1-beta",
+  "description": "official node parser for OnlyData",
   "main": "onlydata.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/imaginate/onlydata.git"
+    "url": "https://github.com/imaginate/onlydata-node.git"
   },
   "author": "Adam Smith <adam@imaginate.life> (https://imaginate.life)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/imaginate/onlydata/issues"
+    "url": "https://github.com/imaginate/onlydata-node/issues"
   },
-  "homepage": "http://onlydata.tech",
+  "homepage": "http://onlydata.tech/node",
   "dependencies": {
     "node-vitals": "4.x"
   },

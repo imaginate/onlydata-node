@@ -7,5 +7,5 @@
 - Submit a pull request
 
 ## Contact
-- **bugs and improvements:** [open an issue](https://github.com/imaginate/onlydata/issues)
+- **bugs and improvements:** [open an issue](https://github.com/imaginate/onlydata-node/issues)
 - **all other questions:** adam@imaginate.life
