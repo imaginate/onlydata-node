@@ -29,16 +29,6 @@ obj = od(file);
 obj = od.parse(file);
 obj = od.parseFile(file);
 
-// make string
-str = od(obj);
-str = od.make(obj);
-str = od.makeString(obj);
-
-// make file
-str = od(obj, file);
-str = od.make(obj, file);
-str = od.makeFile(obj, file);
-
 // set config
 od.setConfig(key, val);
 od.setConfig({

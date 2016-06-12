@@ -26,7 +26,6 @@ var fuse   = vitals.fuse;
 var get    = vitals.get;
 var has    = vitals.has;
 var is     = vitals.is;
-var to     = vitals.to;
 
 var hasODExt  = require('./help/has-onlydata-ext');
 var normalize = require('./help/normalize-eol');
@@ -58,74 +57,6 @@ function newOnlyData() {
     if (!arguments.length) throw new Error('a `content` param must be given');
     else throw new TypeError('invalid type for `content` param');
   };
-
-  /**
-   * Makes an OnlyData string from a given object and saves it to file if a file
-   *   is given.
-   *
-   * @param {!Object} obj
-   * @param {string=} file
-   * @return {string}
-   */
-  od.make = function makeOnlyData(obj, file) {
-
-    /** @type {string} */
-    var result;
-
-    if ( !arguments.length ) throw new Error('an `obj` param must be given');
-    if ( !is.obj(obj)      ) throw new TypeError('invalid type for `obj` param');
-    if ( !is('str=', file) ) throw new TypeError('invalid type for `file` param');
-
-    result = make(config, obj);
-
-    if (file) {
-      if ( !hasODExt(file) ) throw new Error('invalid file extension for `file` param');
-      to.file(result, file);
-    }
-
-    return result;
-  };
-  od.mk = od.make;
-
-  /**
-   * Makes an OnlyData string from a given object.
-   *
-   * @param {!Object} obj
-   * @return {string}
-   */
-  od.makeString = function makeOnlyDataString(obj) {
-
-    if ( !arguments.length ) throw new Error('an `obj` param must be given');
-    if ( !is.obj(obj)  ) throw new TypeError('invalid type for `obj` param');
-
-    return make(config, obj);
-  };
-  od.makeStr  = od.makeString;
-  od.mkStr    = od.makeString;
-  od.mkString = od.makeString;
-
-  /**
-   * Makes an OnlyData string from a given object and saves it to a file.
-   *
-   * @param {!Object} obj
-   * @param {string} file
-   * @return {string}
-   */
-  od.makeFile = function makeOnlyDataFile(obj, file) {
-
-    /** @type {string} */
-    var result;
-
-    if ( arguments.length < 2 ) throw new Error('an `obj` and `file` param must be given');
-    if ( !is.obj(obj)    ) throw new TypeError('invalid type for `obj` param');
-    if ( !is.str(file)   ) throw new TypeError('invalid type for `file` param');
-    if ( !hasODExt(file) ) throw new Error('invalid file extension for `file` param');
-
-    result = make(config, obj);
-    to.file(result, file);
-    return result;
-  };
-  od.mkFile = od.makeFile;
 
   /**
    * Parses an OnlyData string or file into an object.
