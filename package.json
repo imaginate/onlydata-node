@@ -1,7 +1,7 @@
 {
   "name": "onlydata",
   "version": "0.0.1-beta",
-  "description": "official node parser for OnlyData",
+  "description": "official OnlyData parser",
   "main": "onlydata.js",
   "repository": {
     "type": "git",
