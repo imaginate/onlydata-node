@@ -20,7 +20,7 @@ var trimBaseKey = require('./base-key/trim');
 var isBlock   = require('./is-blocked-string');
 var isBoolean = require('./boolean/is');
 var isComment = require('./comment/is');
-var isImport  = require('./is-import');
+var isImport  = require('./import/is');
 var isList    = require('./is-list');
 var isMap     = require('./is-map');
 var isNull    = require('./is-null');
@@ -29,7 +29,7 @@ var isQuoted  = require('./is-quoted-string');
 
 var parseBlock   = require('./parse-blocked-string');
 var parseBoolean = require('./boolean/parse');
-var parseImport  = require('./parse-import');
+var parseImport  = require('./import/parse');
 var parseList    = require('./parse-list');
 var parseMap     = require('./parse-map');
 var parseNumber  = require('./parse-number');
@@ -114,7 +114,7 @@ module.exports = function parseOnlyData(config, data, file) {
           : isBoolean(val)
             ? parseBoolean(val)
             : isImport(val)
-              ? parseImport(val, i, file)
+              ? parseImport(config, val, i, file)
               : isNumber(val)
                 ? parseNumber(val)
                 : parseString(val);
