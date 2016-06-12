@@ -17,24 +17,24 @@
 var getBaseKey  = require('./base-key/get');
 var trimBaseKey = require('./base-key/trim');
 
-var isBlock   = require('./is-blocked-string');
+var isBlock   = require('./string/blocked/is');
 var isBoolean = require('./boolean/is');
 var isComment = require('./comment/is');
 var isImport  = require('./import/is');
-var isList    = require('./is-list');
-var isMap     = require('./is-map');
-var isNull    = require('./is-null');
-var isNumber  = require('./is-number');
-var isQuoted  = require('./is-quoted-string');
+var isList    = require('./list/is');
+var isMap     = require('./map/is');
+var isNull    = require('./null/is');
+var isNumber  = require('./number/is');
+var isQuoted  = require('./string/quoted/is');
 
-var parseBlock   = require('./parse-blocked-string');
+var parseBlock   = require('./string/blocked/parse');
 var parseBoolean = require('./boolean/parse');
 var parseImport  = require('./import/parse');
-var parseList    = require('./parse-list');
-var parseMap     = require('./parse-map');
-var parseNumber  = require('./parse-number');
-var parseQuoted  = require('./parse-quoted-string');
-var parseString  = require('./parse-basic-string');
+var parseList    = require('./list/parse');
+var parseMap     = require('./map/parse');
+var parseNumber  = require('./number/parse');
+var parseQuoted  = require('./string/quoted/parse');
+var parseString  = require('./string/parse');
 
 var vitals = require('../help/vitals');
 var fuse   = vitals.fuse;
