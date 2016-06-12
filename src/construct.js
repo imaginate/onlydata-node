@@ -14,7 +14,6 @@
 
 'use strict';
 
-var make  = require('./make');
 var parse = require('./parse');
 
 var CONF_TYPE = require('./config/types');
@@ -41,49 +40,36 @@ function newOnlyData() {
   config = fuse({}, CONF_VALS);
 
   /**
-   * The base method acts as `onlydata.make` and `onlydata.parse` simultaneously.
+   * Parses an OnlyData string or file into an object.
    *
-   * @param {(!Object|string)} content - details per `content` data type:
-   *   - object: `onlydata.make` is ran
-   *   - string: `onlydata.parse` is ran
-   * @param {string=} file - only valid if `content` is an object
+   * @param {(string|!Buffer)} str - a string of OnlyData or a valid OnlyData filepath
    * @return {(!Object|string)}
    */
-  var od = function onlydata(content, file) {
+  var od = function onlydata(str) {
 
-    if ( is.obj(content) ) return od.make(content, file);
-    if ( is.str(content) ) return od.parse(content);
+    if ( is.buffer(str) || is.string(str) ) return od.parse(str);
 
-    if (!arguments.length) throw new Error('a `content` param must be given');
-    else throw new TypeError('invalid type for `content` param');
+    if ( !arguments.length ) throw new Error('a `str` param must be given');
+    else throw new TypeError('invalid type for `str` param');
   };
 
   /**
    * Parses an OnlyData string or file into an object.
    *
-   * @param {string} str - a string of OnlyData or a valid OnlyData file path
+   * @param {(string|!Buffer)} str - a string of OnlyData or a valid OnlyData filepath
    * @return {!Object}
    */
   od.parse = function parseOnlyData(str) {
 
-    /** @type {string} */
-    var file;
-
     if ( !arguments.length ) throw new Error('a `str` param must be given');
+
+    if ( is.buffer(str) ) return od.parseBuffer(str);
+
     if ( !is.str(str) ) throw new TypeError('invalid type for `str` param');
 
-    if ( is.file(str) ) {
-      if ( !hasODExt(str) ) throw new Error('invalid file extension for `str` param');
-      file = str;
-      str = get.file(file, {
-        'buffer':   false,
-        'encoding': 'utf8',
-        'eol':      'LF'
-      });
-    }
-    else str = normalize(str);
-
-    return parse(config, str, file);
+    return is.file(str)
+      ? od.parseFile(str)
+      : od.parseString(str);
   };
 
   /**
@@ -101,6 +87,25 @@ function newOnlyData() {
     return parse(config, str);
   };
   od.parseStr = od.parseString;
+
+  /**
+   * Parses an OnlyData buffer into an object.
+   *
+   * @param {!Buffer} buffer - a buffered string of OnlyData
+   * @return {!Object}
+   */
+  od.parseBuffer = function parseOnlyDataBuffer(buff) {
+
+    /** @type {string} */
+    var content;
+
+    if ( !arguments.length ) throw new Error('a `buff` param must be given');
+    if ( !is.buffer(buff)  ) throw new TypeError('invalid type for `buff` param');
+
+    content = buff.toString();
+    content = normalize(content);
+    return parse(config, content);
+  };
 
   /**
    * Parses an OnlyData file into an object.

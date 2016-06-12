@@ -14,7 +14,7 @@ var od = require('onlydata');
 
 // values
 var str = 'an string of OnlyData syntax';
-var obj = { an: 'object', aka: 'map' };
+var buff = new Buffer();
 var file = 'path/to/file.onlydata';
 // or      'path/to/file.only';
 // or      'path/to/file.od';
@@ -23,6 +23,11 @@ var file = 'path/to/file.onlydata';
 obj = od(str);
 obj = od.parse(str);
 obj = od.parseString(str);
+
+// parse buffer
+obj = od(buff);
+obj = od.parse(buff);
+obj = od.parseBuffer(buff);
 
 // parse file
 obj = od(file);
