@@ -13,8 +13,8 @@ npm install onlydata
 var od = require('onlydata');
 
 // values
-var str = 'an string of OnlyData syntax';
-var buff = new Buffer();
+var str = 'a string of OnlyData syntax';
+var buff = new Buffer('OnlyData stuff');
 var file = 'path/to/file.onlydata';
 // or      'path/to/file.only';
 // or      'path/to/file.od';
