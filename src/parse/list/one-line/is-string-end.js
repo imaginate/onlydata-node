@@ -28,6 +28,8 @@ var CLOSE = ']';
  */
 module.exports = function isListStringEnd(line, i) {
 
+  /** @type {string} */
+  var char;
   /** @type {number} */
   var len;
 
