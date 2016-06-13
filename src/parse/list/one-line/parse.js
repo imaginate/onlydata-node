@@ -18,7 +18,6 @@ var isBoolean = require('../../boolean/is');
 var isEndMark = require('./is-end-mark');
 var isNull    = require('../../null/is');
 var isNumber  = require('../../number/is');
-var isQuote   = require('./is-quote-mark');
 
 var parseBoolean = require('../../boolean/parse');
 var parseNumber  = require('../../number/parse');
@@ -28,6 +27,7 @@ var fuse   = vitals.fuse;
 var is     = vitals.is;
 var same   = vitals.same;
 
+var isQuote = require('../../../help/is-quote-mark');
 var isSpace = require('../../../help/is-whitespace');
 
 var BACK  = '\\';

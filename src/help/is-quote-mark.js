@@ -14,7 +14,7 @@
 
 'use strict';
 
-var has = require('../../../help/vitals').has;
+var has = require('./vitals').has;
 
 var QUOTES = {
   '"': true,
