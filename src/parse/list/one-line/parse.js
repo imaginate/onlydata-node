@@ -31,8 +31,9 @@ var same   = vitals.same;
 
 var isSpace = require('../../../help/is-whitespace');
 
+var BACK  = '\\';
 var COMMA = ',';
-var END   = ']';
+var CLOSE = ']';
 var HASH  = '#';
 
 /**
@@ -56,33 +57,49 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
 
   /** @type {string} */
   var item;
+  /** @type {string} */
+  var end;
   /** @type {number} */
   var i;
   /** @type {boolean} */
   var v;
 
   i = 0;
-  while (++i < LEN) {
+  while (++i) {
+    if (i >= LEN) throw new Error( invalidErrMsg(ROW, FILE) );
+
+    // trim leading whitespace
+    i = skipSpace(i);
 
     item = LINE[i];
 
-    if ( isSpace(item) ) continue;
+    // error: empty value
+    if ( same(item, COMMA) ) throw new Error( missingErrMsg(ROW, FILE) );
 
-    if ( same(item, COMMA) ) {
-      if (!v) throw new Error( missingErrMsg(ROW, FILE) );
-      v = false;
-      continue;
-    }
-
-    if ( same(item, END) ) {
+    // close array and verify ending syntax
+    if ( same(item, CLOSE) ) {
       parseEnd(i);
       break;
     }
 
+    // parse value and progress index
     i = isQuote(item)
       ? parseString(item, i)
       : parseValue(item, i);
-    v = true;
+
+    // trim following whitespace
+    i = skipSpace(i);
+
+    end = LINE[i];
+
+    // close array and verify ending syntax
+    if ( same(end, CLOSE) ) {
+      parseEnd(i);
+      break;
+    }
+
+    // error: value was not separated by a comma
+    if ( !same(end, COMMA) ) throw new Error( invalidErrMsg(ROW, FILE) );
   }
 
   return {
@@ -110,8 +127,17 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
     str = '';
     while (++i) {
       if (i >= LEN) throw new Error( invalidErrMsg(ROW, FILE) );
+
       item = LINE[i];
-      if ( same(item, quote) && isStrEnd(LINE, i) ) break;
+
+      if ( same(item, quote) ) break;
+
+      // keep escaped quotes
+      if ( same(item, BACK) && same(LINE[i + 1], quote) ) {
+        ++i;
+        item = LINE[i];
+      }
+
       str = fuse.str(str, item);
     }
 
@@ -120,9 +146,6 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
 
     // progress the index past the last quote mark
     ++i;
-
-    // progress the index past any whitespace
-    while ( isSpace(LINE[i]) ) ++i;
 
     return i;
   }
@@ -147,33 +170,16 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
 
       item = LINE[i];
 
-      // progress the index past any whitespace and end
-      if ( isSpace(item) ) {
-        ++i;
-        while ( isSpace(LINE[i]) ) ++i;
-        if ( !isEndMark(LINE[i]) ) throw new Error( invalidErrMsg(ROW, FILE) );
-        break;
-      }
-
-      // step the index back and end
-      if ( isEndMark(item) ) {
-        --i;
-        break;
-      }
+      if ( isSpace(item) || isEndMark(item) ) break;
 
       str = fuse.str(str, item);
     }
 
     // parse the value
-    val = isNull(str)
-      ? null
-      : isBoolean(str)
-        ? parseBoolean(str)
-        : isNumber(str)
-          ? parseNumber(str)
-          : undefined;
-
-    if ( is.undefined(val) ) throw new Error( invalidErrMsg(ROW, FILE) );
+    if (      isNull(str)    ) val = null;
+    else if ( isBoolean(str) ) val = parseBoolean(str);
+    else if ( isNumber(str)  ) val = parseNumber(str);
+    else throw new Error( invalidErrMsg(ROW, FILE) );
 
     // save the value
     ARR = fuse.value(ARR, val);
@@ -201,6 +207,16 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
 
       throw new Error( invalidErrMsg(ROW, FILE) );
     }
+  }
+
+  /**
+   * @private
+   * @param {number} i
+   * @return {number}
+   */
+  function skipSpace(i) {
+    while ( isSpace(LINE[i]) ) ++i;
+    return i;
   }
 };
 
