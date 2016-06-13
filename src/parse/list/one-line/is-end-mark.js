@@ -17,8 +17,8 @@
 var has = require('../../../help/vitals').has;
 
 var END = {
-  ',': ',',
-  ']': ']'
+  ',': true,
+  ']': true
 };
 
 /**
