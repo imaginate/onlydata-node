@@ -19,7 +19,6 @@ var isEndMark = require('./is-end-mark');
 var isNull    = require('../../null/is');
 var isNumber  = require('../../number/is');
 var isQuote   = require('./is-quote-mark');
-var isStrEnd  = require('./is-string-end');
 
 var parseBoolean = require('../../boolean/parse');
 var parseNumber  = require('../../number/parse');
