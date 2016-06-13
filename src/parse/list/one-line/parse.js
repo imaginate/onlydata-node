@@ -24,7 +24,6 @@ var parseNumber  = require('../../number/parse');
 
 var vitals = require('../../../help/vitals');
 var fuse   = vitals.fuse;
-var is     = vitals.is;
 var same   = vitals.same;
 
 var isQuote = require('../../../help/is-quote-mark');
