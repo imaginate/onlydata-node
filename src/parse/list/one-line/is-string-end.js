@@ -14,12 +14,9 @@
 
 'use strict';
 
-var same = require('../../../help/vitals').same;
+var isEnd = require('./is-end-mark');
 
 var isSpace = require('../../../help/is-whitespace');
-
-var COMMA = ',';
-var CLOSE = ']';
 
 /**
  * @param {string} line
@@ -29,19 +26,18 @@ var CLOSE = ']';
 module.exports = function isListStringEnd(line, i) {
 
   /** @type {string} */
-  var char;
+  var item;
   /** @type {number} */
   var len;
 
   len = line.length;
   while (++i < len) {
 
-    char = line[i];
+    item = line[i];
 
-    if ( isSpace(char) ) continue;
+    if ( isSpace(item) ) continue;
 
-    if ( same(char, COMMA) ) break;
-    if ( same(char, CLOSE) ) break;
+    if ( isEnd(item) ) break;
 
     return false;
   }
