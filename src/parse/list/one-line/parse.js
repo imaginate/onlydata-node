@@ -14,16 +14,12 @@
 
 'use strict';
 
-var trimStrEnd = require('./trim-string-end');
-var trimValEnd = require('./trim-value-end');
-
-var isBoolean   = require('../../boolean/is');
-var isComment   = require('../../comment/is');
-var isNull      = require('../../null/is');
-var isNumber    = require('../../number/is');
-var isQuote     = require('../../string/quoted/is');
-var isStrEnd    = require('./is-string-end');
-var isValidEnd  = require('./is-valid-end');
+var isBoolean = require('../../boolean/is');
+var isEndMark = require('./is-end-mark');
+var isNull    = require('../../null/is');
+var isNumber  = require('../../number/is');
+var isQuote   = require('./is-quote-mark');
+var isStrEnd  = require('./is-string-end');
 
 var parseBoolean = require('../../boolean/parse');
 var parseNumber  = require('../../number/parse');
@@ -36,125 +32,177 @@ var same   = vitals.same;
 var isSpace = require('../../../help/is-whitespace');
 
 var COMMA = ',';
-var CLOSE = ']';
+var END   = ']';
+var HASH  = '#';
 
 /**
- * @param {string} line
- * @param {number} index
- * @param {string} file
+ * @param {string} LINE
+ * @param {number} ROW
+ * @param {string} FILE
  * @return {!{
  *   index: number,
  *   value: !Array
  * }}
  */
-module.exports = function parseOnlyDataInlineList(line, index, file) {
+module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
+
+  /** @type {!Array} */
+  var ARR;
+  /** @type {number} */
+  var LEN;
+
+  ARR = []; // note: array values are not constant
+  LEN = LINE.length;
 
   /** @type {string} */
-  var char;
-  /** @type {!Array} */
-  var arr;
-  /** @type {*} */
-  var val;
-  /** @type {number} */
-  var len;
+  var item;
   /** @type {number} */
   var i;
-  /** @type {string} */
-  var q;
+  /** @type {boolean} */
+  var v;
 
-  arr = [];
-  len = line.length;
   i = 0;
-  while (++i < len) {
+  while (++i < LEN) {
 
-    char = line[i];
+    item = LINE[i];
 
-    // handle quoted string
-    if (q) {
-      if ( same(char, q) && isStrEnd(line, i) ) {
-        arr = fuse.value(arr, val);
-        val = undefined;
-        i = trimStrEnd(line, i);
-        q = '';
-      }
-      else val = fuse.str(val, char);
+    if ( isSpace(item) ) continue;
+
+    if ( same(item, COMMA) ) {
+      if (!v) throw new Error( missingErrMsg(ROW, FILE) );
+      v = false;
       continue;
     }
 
-    if ( isComment(char) ) throw new Error( invalidErrMsg(index, file) );
-
-    // handle list end
-    if ( same(char, CLOSE) ) {
-      if ( !isValidEnd(line, i) ) throw new Error( invalidErrMsg(index, file) );
-      if ( !is.undefined(val) ) {
-        arr = addValue(arr, val, index, file);
-        val = undefined;
-      }
+    if ( same(item, END) ) {
+      parseEnd(i);
       break;
     }
 
-    if ( isSpace(char) ) {
-
-      // handle value end
-      if ( !is.undefined(val) ) {
-        i = trimValEnd(line, i);
-        if (!i) throw new Error( invalidErrMsg(index, file) );
-        arr = addValue(arr, val, index, file);
-        val = undefined;
-      }
-
-      continue;
-    }
-
-    // handle value end
-    if ( same(char, COMMA) ) {
-      arr = addValue(arr, val, index, file);
-      val = undefined;
-      continue;
-    }
-
-    // handle string start
-    if ( isQuote(char) ) {
-      val = '';
-      q = char;
-      continue;
-    }
-
-    val = fuse.str(val || '', char);
+    i = isQuote(item)
+      ? parseString(item, i)
+      : parseValue(item, i);
+    v = true;
   }
 
-  if ( !is.undefined(val) ) throw new Error( invalidErrMsg(index, file) );
-
   return {
-    'index': index
-    'value': arr
+    'index': ROW
+    'value': ARR
   };
+
+  /**
+   * @private
+   * @param {string} item
+   * @param {number} i
+   * @return {number}
+   */
+  function parseString(item, i) {
+
+    /** @type {string} */
+    var quote;
+    /** @type {string} */
+    var str;
+
+    // save the quote mark
+    quote = item;
+
+    // build the string
+    str = '';
+    while (++i) {
+      if (i >= LEN) throw new Error( invalidErrMsg(ROW, FILE) );
+      item = LINE[i];
+      if ( same(item, quote) && isStrEnd(LINE, i) ) break;
+      str = fuse.str(str, item);
+    }
+
+    // save the string
+    ARR = fuse.value(ARR, str);
+
+    // progress the index past the last quote mark
+    ++i;
+
+    // progress the index past any whitespace
+    while ( isSpace(LINE[i]) ) ++i;
+
+    return i;
+  }
+
+  /**
+   * @private
+   * @param {string} item
+   * @param {number} i
+   * @return {number}
+   */
+  function parseValue(item, i) {
+
+    /** @type {string} */
+    var str;
+    /** @type {*} */
+    var val;
+
+    // build the value string
+    str = item;
+    while (++i) {
+      if (i >= LEN) throw new Error( invalidErrMsg(ROW, FILE) );
+
+      item = LINE[i];
+
+      // progress the index past any whitespace and end
+      if ( isSpace(item) ) {
+        ++i;
+        while ( isSpace(LINE[i]) ) ++i;
+        if ( !isEndMark(LINE[i]) ) throw new Error( invalidErrMsg(ROW, FILE) );
+        break;
+      }
+
+      // step the index back and end
+      if ( isEndMark(item) ) {
+        --i;
+        break;
+      }
+
+      str = fuse.str(str, item);
+    }
+
+    // parse the value
+    val = isNull(str)
+      ? null
+      : isBoolean(str)
+        ? parseBoolean(str)
+        : isNumber(str)
+          ? parseNumber(str)
+          : undefined;
+
+    if ( is.undefined(val) ) throw new Error( invalidErrMsg(ROW, FILE) );
+
+    // save the value
+    ARR = fuse.value(ARR, val);
+
+    return i;
+  }
+
+  /**
+   * @private
+   * @param {number} i
+   */
+  function parseEnd(i) {
+
+    /** @type {string} */
+    var item;
+
+    // ensure valid syntax after array end
+    while (++i < LEN) {
+
+      item = LINE[i];
+
+      if ( isSpace(item) ) continue;
+
+      if ( same(item, HASH) ) break;
+
+      throw new Error( invalidErrMsg(ROW, FILE) );
+    }
+  }
 };
-
-/**
- * @private
- * @param {!Array} arr
- * @param {string} val
- * @param {number} i
- * @param {string} file
- * @return {!Array}
- */
-function addValue(arr, val, i, file) {
-
-  if ( is.undefined(val) ) throw new Error( missingErrMsg(i, file) );
-
-  val = isNull(val)
-    ? null
-    : isBoolean(val)
-      ? parseBoolean(val)
-      : isNumber(val)
-        ? parseNumber(val)
-        : undefined;
-
-  if ( is.undefined(val) ) throw new Error( invalidErrMsg(i, file) );
-
-  return fuse.value(arr, val);
-}
 
 /**
  * @private
