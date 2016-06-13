@@ -16,12 +16,16 @@
 
 var has = require('./vitals').has;
 
-var RE = /[ \t\v]/;
+var SPACE = {
+  ' ':  true,
+  '\t': true,
+  '\v': true
+};
 
 /**
- * @param {string} content
+ * @param {string} item
  * @return {string}
  */
-module.exports = function isWhitespace(content) {
-  return has(content, RE);
+module.exports = function isWhitespace(item) {
+  return has(SPACE, item);
 };
