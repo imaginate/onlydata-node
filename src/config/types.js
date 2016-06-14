@@ -12,14 +12,11 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var is = require('../help/vitals').is;
-
 /**
+ * @private
  * @type {!Object<string, function(*): boolean>}
  * @const
  */
-module.exports = {
+CONF_TYPES = {
   'import-root': is.string
 };

@@ -12,12 +12,11 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
 /**
+ * @private
  * @type {!Object<string, *>}
  * @const
  */
-module.exports = {
-  'import-root': ''
+CONF_VALUES = {
+  'import-base': {}
 };
