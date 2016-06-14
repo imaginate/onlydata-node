@@ -38,7 +38,7 @@ function parse() {
     parseKey();
     skipWhitespace();
 
-    if ( !isEqualSign(DATA[$i]) ) throw new Error( err('invalid assignment') );
+    if ( !isEqualSign(DATA[$i]) ) throw new Error( err('invalid key assignment') );
 
     ++$i; // skip equal sign
     skipWhitespace();
@@ -55,11 +55,16 @@ function parse() {
  */
 function parseKey() {
 
-  while ($i < LEN) {
+  if ( !isOpenKeyChar($char) ) throw new Error( err('invalid open key character') );
+
+  $key = $char;
+  while (++$i < LEN) {
 
     $char = DATA[$i];
 
-    //
+    if ( !isKeyChar($char) ) break;
+
+    $key = fuse.string($key, $char);
   }
 }
 
@@ -69,41 +74,4 @@ function parseKey() {
  */
 function parseValue() {
 
-  while ($i < LEN) {
-
-    $char = DATA[$i];
-
-    if ( isLineBreak($char) || isHashMark($char) ) throw new Error( err('missing a value') );
-
-    /*
-    // parse lists, maps, and string blocks (i.e. multi-line values)
-      val = isList(val)
-        ? parseList(lines, i, file)
-        : isMap(val)
-          ? parseMap(lines, i, file)
-          : isBlock(val)
-            ? parseBlock(lines, i, file)
-            : val;
-
-      // save list, map, or string block result
-      if ( is.obj(val) ) {
-        i   = val.index;
-        val = val.value;
-      }
-      else {
-        // parse remaining data types
-        val = isQuoted(val)
-          ? parseQuoted(val, i, file)
-          : isNull(val)
-            ? null
-            : isBoolean(val)
-              ? parseBoolean(val)
-              : isImport(val)
-                ? parseImport(config, val, i, file)
-                : isNumber(val)
-                  ? parseNumber(val)
-                  : parseString(val);
-      }
-      */
-  }
 }
