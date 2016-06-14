@@ -30,7 +30,7 @@ function init(config, data, file) {
   if ( isContentEmpty(data) ) return {};
 
   CONF = config;
-  DATA = data;
+  DATA = fuse.string(data, '\n');
   FILE = file;
   LEN  = DATA.length;
 

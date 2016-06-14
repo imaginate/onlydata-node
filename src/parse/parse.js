@@ -62,7 +62,7 @@ function parseKey() {
   if ( !isOpenKeyChar($char) ) throw new Error( err('invalid open key character') );
 
   $key = $char;
-  while (++$i < LEN) {
+  while (++$i) {
 
     $char = DATA[$i];
 
@@ -97,7 +97,7 @@ function parseValue() {
   // parse: basic string, number, boolean, null, import
 
   $val = $char;
-  while (++$i < LEN) {
+  while (++$i) {
 
     $char = DATA[$i];
 
