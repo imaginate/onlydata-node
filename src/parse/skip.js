@@ -25,11 +25,9 @@ function skipWhitespace() {
  * @type {function}
  */
 function skipComment() {
-  while (++$i < LEN) {
-    if ( isLineBreak(DATA[$i]) ) {
-      ++$line;
-      ++$i;
-      break;
+  if ( isHashMark(DATA[$i]) ) {
+    while (++$i < LEN) {
+      if ( isLineBreak(DATA[$i]) ) break;
     }
   }
 }

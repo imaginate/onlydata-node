@@ -21,17 +21,13 @@ function parse() {
   while ($i < LEN) {
 
     skipWhitespace();
+    skipComment();
 
     $char = DATA[$i];
 
     if ( isLineBreak($char) ) {
       ++$i;
       ++$line;
-      continue;
-    }
-
-    if ( isHashMark($char) ) {
-      skipComment();
       continue;
     }
 
