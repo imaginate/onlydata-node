@@ -20,7 +20,7 @@ var slice  = vitals.slice;
 
 var isQuote = require('../../../help/is-quote-mark');
 
-var BACK  = '\\';
+var BACK = '\\';
 
 /**
  * @param {string} line
