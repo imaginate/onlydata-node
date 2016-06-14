@@ -12,16 +12,25 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var has = require('./vitals').has;
-
-var BLANK = /^\s+$/;
-
 /**
- * @param {string} str
+ * @private
+ * @param {string} content
  * @return {boolean}
  */
-module.exports = function isEmptyStr(str) {
-  return !str || has(str, BLANK);
-};
+var isContentEmpty = (function _build_isContentEmpty() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var EMPTY = /^\s+$/;
+
+  /**
+   * @param {string} content
+   * @return {boolean}
+   */
+  return function isContentEmpty(content) {
+    return !content || has(content, EMPTY);
+  };
+})();

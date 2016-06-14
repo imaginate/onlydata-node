@@ -12,18 +12,33 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var cut = require('./vitals').cut;
-
-var A = /^[ \t\v]+/;
-var Z = /[ \t\v]+$/;
-
 /**
+ * @private
  * @param {string} content
  * @return {string}
  */
-module.exports = function trimWhitespace(content) {
-  content = cut(content, A);
-  return cut(content, Z);
-};
+var trimWhitespace = (function _build_trimWhitespace() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var A = /^[ \t\v]+/;
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var Z = /[ \t\v]+$/;
+
+  /**
+   * @param {string} content
+   * @return {string}
+   */
+  return function trimWhitespace(content) {
+    content = cut(content, A);
+    return cut(content, Z);
+  };
+})();

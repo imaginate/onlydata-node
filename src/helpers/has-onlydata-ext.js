@@ -12,16 +12,25 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var has = require('./vitals').has;
-
-var OD_EXT = /\.(?:od|only|onlydata)$/i;
-
 /**
+ * @private
  * @param {string} file
  * @return {boolean}
  */
-module.exports = function hasOnlyDataExt(file) {
-  return has(file, OD_EXT);
-};
+var hasOnlyDataExt = (function _build_hasOnlyDataExt() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var EXT = /\.(?:od|only|onlydata)$/i;
+
+  /**
+   * @param {string} file
+   * @return {boolean}
+   */
+  return function hasOnlyDataExt(file) {
+    return has(file, EXT);
+  };
+})();

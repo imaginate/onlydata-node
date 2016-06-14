@@ -12,19 +12,28 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var has = require('./vitals').has;
-
-var QUOTES = {
-  '"': true,
-  "'": true
-};
-
 /**
- * @param {string} item
+ * @private
+ * @param {string} ch - one character
  * @return {boolean}
  */
-module.exports = function isQuoteMark(item) {
-  return has(QUOTES, item);
-};
+var isQuoteMark = (function _build_isQuoteMark() {
+
+  /**
+   * @private
+   * @type {!Object}
+   * @const
+   */
+  var QUOTES = {
+    '"': true,
+    "'": true
+  };
+
+  /**
+   * @param {string} ch
+   * @return {boolean}
+   */
+  return function isQuoteMark(ch) {
+    return has(QUOTES, ch);
+  };
+})();

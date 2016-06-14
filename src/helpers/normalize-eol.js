@@ -12,14 +12,11 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var remap = require('./vitals').remap;
-
 /**
+ * @private
  * @param {string} content
  * @return {string}
  */
-module.exports = function normalizeEol(content) {
+function normalizeEol(content) {
   return remap(content, /\r\n?/g, '\n');
-};
+}

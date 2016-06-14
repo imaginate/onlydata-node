@@ -12,20 +12,29 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var has = require('./vitals').has;
-
-var SPACE = {
-  ' ':  true,
-  '\t': true,
-  '\v': true
-};
-
 /**
- * @param {string} item
- * @return {string}
+ * @private
+ * @param {string} ch - one character
+ * @return {boolean}
  */
-module.exports = function isWhitespace(item) {
-  return has(SPACE, item);
-};
+var isWhitespace = (function _build_isWhitespace() {
+
+  /**
+   * @private
+   * @type {!Object}
+   * @const
+   */
+  var SPACE = {
+    ' ':  true,
+    '\t': true,
+    '\v': true
+  };
+
+  /**
+   * @param {string} ch
+   * @return {boolean}
+   */
+  return function isWhitespace(ch) {
+    return has(SPACE, ch);
+  };
+})();
