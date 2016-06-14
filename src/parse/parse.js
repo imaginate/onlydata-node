@@ -74,4 +74,23 @@ function parseKey() {
  */
 function parseValue() {
 
+  $char = DATA[$i];
+
+  if ( isLineBreak($char) || isHashMark($char) ) throw new Error( err('missing a value') );
+
+  if ( isQuoteMark($char) ) return parseQuoted();
+  if ( isListOpen($char)  ) return parseList();
+  if ( isMapOpen($char)   ) return parseMap();
+
+  if ( isLessSign($char) && isLessSign(DATA[$i + 1]) ) {
+    return isLessSign(DATA[$i + 2])
+      ? parseRawBlock()
+      : parseBlock();
+  }
+
+  while ($i < LEN) {
+
+    $char = DATA[$i];
+
+  }
 }
