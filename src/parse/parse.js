@@ -110,6 +110,7 @@ function parseValue() {
   if (      isNull($val)    ) $val = null;
   else if ( isBoolean($val) ) parseBoolean();
   else if ( isImport($val)  ) parseImport();
-  else if ( isNumber($val)  ) parseNumber();
+  else if ( isInteger($val) ) parseInteger();
+  else if ( isFloat($val)   ) parseFloat();
   else parseString();
 }
