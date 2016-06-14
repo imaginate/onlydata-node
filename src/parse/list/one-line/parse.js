@@ -39,12 +39,15 @@ var HASH  = '#';
  * @param {number} ROW
  * @param {string} FILE
  * @return {!{
+ *   comma: boolean,
  *   index: number,
  *   value: !Array
  * }}
  */
 module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
 
+  /** @type {boolean} */
+  var END_COMMA;
   /** @type {!Array} */
   var ARR;
   /** @type {number} */
@@ -101,7 +104,8 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
   }
 
   return {
-    'index': ROW
+    'comma': END_COMMA,
+    'index': ROW,
     'value': ARR
   };
 
@@ -202,6 +206,11 @@ module.exports = function parseOnlyDataInlineList(LINE, ROW, FILE) {
       if ( isSpace(item) ) continue;
 
       if ( same(item, HASH) ) break;
+
+      if ( same(item, COMMA) ) {
+        END_COMMA = true;
+        continue;
+      }
 
       throw new Error( invalidErrMsg(ROW, FILE) );
     }
