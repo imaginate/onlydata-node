@@ -82,7 +82,8 @@ function parseValue() {
 
   if ( isLineBreak($char) || isHashMark($char) ) throw new Error( err('missing a value') );
 
-  if ( isQuoteMark($char) ) return parseQuoted(); // note: quoted string
+  // parse: quoted string, list, map
+  if ( isQuoteMark($char) ) return parseQuoted();
   if ( isListOpen($char)  ) return parseList();
   if ( isMapOpen($char)   ) return parseMap();
 
