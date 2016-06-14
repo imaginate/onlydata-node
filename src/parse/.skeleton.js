@@ -12,6 +12,8 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
+// OUT ./index.js
+
 /**
  * @private
  * @param {!Object} config
