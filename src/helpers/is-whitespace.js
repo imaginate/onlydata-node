@@ -24,11 +24,7 @@ var isWhitespace = (function _build_isWhitespace() {
    * @type {!Object}
    * @const
    */
-  var SPACE = {
-    ' ':  true,
-    '\t': true,
-    '\v': true
-  };
+  var SPACE = newCharMap(' \t\v');
 
   /**
    * @param {string} ch
