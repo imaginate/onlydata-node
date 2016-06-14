@@ -32,6 +32,7 @@ var until  = vitals.until;
 
 // INSERT ./helpers/*.js
 // INSERT ./config/*.js
+// INSERT ./parse/index.js
 // INSERT ./constructor.js
 
 module.exports = newOnlyData();
