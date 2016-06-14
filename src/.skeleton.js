@@ -1,3 +1,4 @@
+// OUT ../onlydata.js
 /**
  * -----------------------------------------------------------------------------
  * OnlyData
@@ -11,8 +12,6 @@
  * @see [JSDoc3](http://usejsdoc.org)
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
-
-// OUT ../onlydata.js
 
 'use strict';
 
