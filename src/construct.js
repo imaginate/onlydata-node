@@ -12,181 +12,304 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var parse = require('./parse');
-
-var CONF_TYPE = require('./config/types');
-var CONF_VALS = require('./config/values');
-
-var vitals = require('./help/vitals');
-var each   = vitals.each;
-var fuse   = vitals.fuse;
-var get    = vitals.get;
-var has    = vitals.has;
-var is     = vitals.is;
-
-var hasODExt  = require('./help/has-onlydata-ext');
-var normalize = require('./help/normalize-eol');
-
 /**
- * @return {Function<string, function>}
+ * The OnlyData constructor.
+ *
+ * @public
+ * @return {!Function{
+ *   parse:       function,
+ *   parseString: function,
+ *   parseBuffer: function,
+ *   parseFile:   function,
+ *   getConfig:   function,
+ *   setConfig:   function,
+ *   resetConfig: function
+ * }}
  */
-function newOnlyData() {
-
-  /** @type {!Object} */
-  var config;
-
-  config = fuse({}, CONF_VALS);
+var newOnlyData = (function _build_newOnlyData() {
 
   /**
-   * Parses an OnlyData string or file into an object.
-   *
-   * @param {(string|!Buffer)} str - a string of OnlyData or a valid OnlyData filepath
-   * @return {(!Object|string)}
+   * @private
+   * @type {!Object}
+   * @const
    */
-  var od = function onlydata(str) {
-
-    if ( is.buffer(str) || is.string(str) ) return od.parse(str);
-
-    if ( !arguments.length ) throw new Error('a `str` param must be given');
-    else throw new TypeError('invalid type for `str` param');
-  };
-
-  /**
-   * Parses an OnlyData string or file into an object.
-   *
-   * @param {(string|!Buffer)} str - a string of OnlyData or a valid OnlyData filepath
-   * @return {!Object}
-   */
-  od.parse = function parseOnlyData(str) {
-
-    if ( !arguments.length ) throw new Error('a `str` param must be given');
-
-    if ( is.buffer(str) ) return od.parseBuffer(str);
-
-    if ( !is.str(str) ) throw new TypeError('invalid type for `str` param');
-
-    return is.file(str)
-      ? od.parseFile(str)
-      : od.parseString(str);
-  };
-
-  /**
-   * Parses an OnlyData string into an object.
-   *
-   * @param {string} str - a string of OnlyData
-   * @return {!Object}
-   */
-  od.parseString = function parseOnlyDataString(str) {
-
-    if ( !arguments.length ) throw new Error('a `str` param must be given');
-    if ( !is.str(str) ) throw new TypeError('invalid type for `str` param');
-
-    str = normalize(str);
-    return parse(config, str);
-  };
-  od.parseStr = od.parseString;
-
-  /**
-   * Parses an OnlyData buffer into an object.
-   *
-   * @param {!Buffer} buffer - a buffered string of OnlyData
-   * @return {!Object}
-   */
-  od.parseBuffer = function parseOnlyDataBuffer(buff) {
-
-    /** @type {string} */
-    var content;
-
-    if ( !arguments.length ) throw new Error('a `buff` param must be given');
-    if ( !is.buffer(buff)  ) throw new TypeError('invalid type for `buff` param');
-
-    content = buff.toString();
-    content = normalize(content);
-    return parse(config, content);
-  };
-
-  /**
-   * Parses an OnlyData file into an object.
-   *
-   * @param {string} file - a valid OnlyData file path
-   * @return {!Object}
-   */
-  od.parseFile = function parseOnlyDataFile(file) {
-
-    /** @type {string} */
-    var content;
-
-    if ( !arguments.length ) throw new Error('a `file` param must be given');
-    if ( !is.str(file)     ) throw new TypeError('invalid type for `file` param');
-    if ( !is.file(file)    ) throw new Error('invalid file path for `file` param');
-    if ( !hasODExt(file)   ) throw new Error('invalid file extension for `file` param');
-    
-    content = get.file(file, {
-      'buffer':   false,
-      'encoding': 'utf8',
-      'eol':      'LF'
-    });
-    return parse(config, content, file);
-  };
-
-  /**
-   * Sets configuration properties for an OnlyData instance.
-   *
-   * @param {!Object=} props - new values for OnlyData config props
-   * @param {string=} key - a valid OnlyData config prop key
-   * @param {*=} val - the new value - use only with `key`
-   */
-  od.setConfig = function setOnlyDataConfig(props, key, val) {
-
-    if ( !arguments.length ) throw new Error('a `props` param must be given');
-
-    if ( is.str(props) ) {
-      if ( arguments.length < 2 ) throw new Error('a `key` and `val` param must be given');
-
-      val = key;
-      key = props;
-
-      if ( !has(config, key)    ) throw new Error('invalid `key` param (must be a config prop)');
-      if ( !CONF_TYPE[key](val) ) throw new TypeError('invalid type for `val` param');
-
-      config[key] = val;
+  var ERR_MSG = {
+    'content': 'invalid type for `content` param',
+    'file': {
+      'type': 'invalid type for `file` param',
+      'path': 'invalid filepath for `file` param',
+      'ext':  'invalid file extension for `file` param'
     }
-    else {
-      if ( !is.obj(props) ) throw new TypeError('invalid type for `props` param');
+  };
 
-      each(props, function(val, key) {
-        if ( !has(config, key)    ) throw new Error('invalid key in `props` (all must be config props)');
-        if ( !CONF_TYPE[key](val) ) throw new TypeError('invalid value type in `props`');
+  /**
+   * @private
+   * @type {!Object}
+   * @const
+   */
+  var CONF_ERR_MSG = {
+    'get': {
+      'type': 'invalid type for `prop` param',
+      'key':  'invalid `prop` param (must be a config key name)'
+    },
+    'set': {
+      'key':  'invalid `prop` param (must be a config key name)',
+      'val':  'invalid type for `val` param',
+      'type': 'invalid type for `props` param',
+      'keys': 'invalid prop key in `props` obj (must be config key names)',
+      'vals': 'invalid type for a prop value in `props` obj'
+    },
+    'reset': {
+      'type': 'invalid type for `prop` param',
+      'key':  'invalid `prop` param (must be a config key name)'
+    }
+  };
 
-        config[key] = val;
+  /**
+   * The OnlyData constructor.
+   *
+   * @public
+   * @return {!Function<string, function>}
+   */
+  function newOnlyData() {
+
+    /** @type {!Function} */
+    var onlydata;
+    /** @type {!Object} */
+    var config;
+
+    // new config instance
+    config = copy(CONF_VALUES);
+
+    // new onlydata instance
+    onlydata = function parseOnlyDataBase(content) {
+      return parseOnlyData(content);
+    };
+
+    // parse methods
+    onlydata.parse       = parseOnlyData;
+    onlydata.parseString = parseOnlyDataString;
+    onlydata.parseBuffer = parseOnlyDataBuffer;
+    onlydata.parseFile   = parseOnlyDataFile;
+
+    // config methods
+    onlydata.getConfig   = function getOnlyDataConfig(prop) {
+      switch (arguments.length) {
+        case 0: return getConfig();
+        case 1: return is.array(prop)
+          ? getConfigProps(prop)
+          : getConfigProp(prop);
+      }
+      return getConfigProps(arguments);
+    };
+    onlydata.setConfig   = function setOnlyDataConfig(prop, val) {
+      return is.string(prop)
+        ? setConfigProp(prop, val)
+        : setConfigProps(prop);
+    };
+    onlydata.resetConfig = function resetOnlyDataConfig(prop) {
+      switch (arguments.length) {
+        case 0: return resetConfig();
+        case 1: return is.array(prop)
+          ? resetConfigProps(prop)
+          : resetConfigProp(prop);
+      }
+      return resetConfigProps(arguments);
+    };
+
+    // constructor
+    onlydata.construct   = newOnlyData;
+    onlydata.constructor = newOnlyData;
+
+    return onlydata;
+
+    /**
+     * Parses OnlyData content into an object.
+     *
+     * @public
+     * @param {(string|!Buffer)} content - Must be a string (or buffered string)
+     *   of OnlyData or a valid OnlyData filepath.
+     * @return {!Object} - The parsed map.
+     */
+    function parseOnlyData(content) {
+
+      if ( is.buffer(content) ) return parseOnlyDataBuffer(content);
+
+      if ( !is.string(content) ) throw new TypeError(ERR_MSG.content);
+
+      return is.file(content)
+        ? parseOnlyDataFile(content)
+        : parseOnlyDataString(content);
+    }
+
+    /**
+     * Parses a string of OnlyData content into an object.
+     *
+     * @public
+     * @param {string} content - Must be a string of OnlyData.
+     * @return {!Object} - The parsed map.
+     */
+    function parseOnlyDataString(content) {
+
+      if ( !is.string(content) ) throw new TypeError(ERR_MSG.content);
+
+      content = normalizeEol(content);
+      return parse(config, content);
+    }
+
+    /**
+     * Parses a string of OnlyData content into an object.
+     *
+     * @public
+     * @param {!Buffer} content - Must be a buffered string of OnlyData.
+     * @return {!Object} - The parsed map.
+     */
+    function parseOnlyDataBuffer(content) {
+
+      if ( !is.buffer(content) ) throw new TypeError(ERR_MSG.content);
+
+      content = to.string(content);
+      content = normalizeEol(content);
+      return parse(config, content);
+    }
+
+    /**
+     * Parses an OnlyData file into an object.
+     *
+     * @public
+     * @param {string} file - Must be a valid OnlyData filepath.
+     * @return {!Object} - The parsed map.
+     */
+    function parseOnlyDataFile(file) {
+
+      /** @type {string} */
+      var content;
+
+      if ( !is.string(file) ) throw new TypeError(ERR_MSG.file.type);
+      if ( !is.file(file)   ) throw new Error(ERR_MSG.file.path);
+      if ( !hasOnlyDataExt(file) ) throw new Error(ERR_MSG.file.ext);
+      
+      content = get.file(file, {
+        'buffer':   false,
+        'encoding': 'utf8',
+        'eol':      'LF'
+      });
+      return parse(config, content, file);
+    }
+
+    /**
+     * Gets a copy of all configuration properties for an OnlyData instance.
+     *
+     * @public
+     * @return {!Object} - A clone of the OnlyData instance's config.
+     */
+    function getConfig() {
+      return copy.object(config, true);
+    }
+
+    /**
+     * Gets a configuration property for an OnlyData instance.
+     *
+     * @public
+     * @param {string} prop - A valid OnlyData config property key name.
+     * @return {*} - The value of the OnlyData instance's config property.
+     */
+    function getConfigProp(prop) {
+
+      if ( !is.string(prop) ) throw new TypeError(CONF_ERR_MSG.get.type);
+      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.get.key);
+
+      return copy(config[prop], true);
+    }
+
+    /**
+     * Gets configuration properties for an OnlyData instance.
+     *
+     * @public
+     * @param {(!Array<string>|!Arguments<string>)} props - The OnlyData config
+     *   property key names to get.
+     * @return {!Object} - A clone of the config property values.
+     */
+    function getConfigProps(props) {
+
+      /** @type {!Object} */
+      var result;
+
+      result = {};
+      each(props, function(prop) {
+        result[prop] = getConfigProp(prop);
+      });
+      return result;
+    }
+
+    /**
+     * Sets a configuration property for an OnlyData instance.
+     *
+     * @public
+     * @param {string} prop - A valid OnlyData config property key name.
+     * @param {*} val - The new config property value.
+     */
+    function setConfigProp(prop, val) {
+
+      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.set.key);
+      if ( !CONF_TYPES[prop](val) ) throw new TypeError(CONF_ERR_MSG.set.val);
+
+      config[prop] = val;
+    }
+
+    /**
+     * Sets configuration properties for an OnlyData instance.
+     *
+     * @public
+     * @param {!Object} props - The new values for OnlyData config properties.
+     */
+    function setConfigProps(props) {
+
+      if ( !is.object(props) ) throw new TypeError(CONF_ERR_MSG.set.type);
+
+      each(props, function(val, prop) {
+        if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.set.keys);
+        if ( !CONF_TYPES[prop](val) ) throw new TypeError(CONF_ERR_MSG.set.vals);
+
+        config[prop] = val;
       });
     }
-  };
 
-  /**
-   * Resets one or all configuration properties for an OnlyData instance.
-   *
-   * @param {...string=} key - if defined must be a valid OnlyData config key
-   */
-  od.resetConfig = function resetOnlyDataConfig(key) {
-
-    if (arguments.length) {
-      each(arguments, function(key) {
-        if ( !is.str(key)      ) throw new TypeError('invalid type for a `key` param');
-        if ( !has(config, key) ) throw new Error('invalid `key` param (must be a config prop)');
-
-        config[key] = CONF_VALS[key];
-      });
+    /**
+     * Resets all configuration properties for an OnlyData instance.
+     *
+     * @public
+     * @type {function}
+     */
+    function resetConfig() {
+      config = fuse(config, CONF_VALUES);
     }
-    else config = fuse(config, CONF_VALS);
-  };
 
-  od.construct   = newOnlyData;
-  od.constructor = newOnlyData;
+    /**
+     * Resets a configuration property for an OnlyData instance.
+     *
+     * @public
+     * @param {string} prop - A valid OnlyData config property key name.
+     */
+    function resetConfigProp(prop) {
 
-  return od;
-}
+      if ( !is.string(prop) ) throw new TypeError(CONF_ERR_MSG.reset.type);
+      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.reset.key);
 
-module.exports = newOnlyData;
+      config[prop] = CONF_VALUES[prop];
+    }
+
+    /**
+     * Resets configuration properties for an OnlyData instance.
+     *
+     * @public
+     * @param {(!Array<string>|!Arguments<string>)} props - The OnlyData config
+     *   property key names to reset.
+     */
+    function resetConfigProps(props) {
+      each(props, resetConfigProp);
+    }
+  }
+
+  return newOnlyData;
+})();
