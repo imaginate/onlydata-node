@@ -14,6 +14,22 @@
 
 'use strict';
 
-var construct = require('./src/construct');
+var vitals = require('node-vitals')('base', 'fs');
+var copy   = vitals.copy;
+var cut    = vitals.cut;
+var each   = vitals.each;
+var fill   = vitals.fill;
+var fuse   = vitals.fuse;
+var get    = vitals.get;
+var has    = vitals.has;
+var is     = vitals.is;
+var remap  = vitals.remap;
+var roll   = vitals.roll;
+var same   = vitals.same;
+var slice  = vitals.slice;
+var to     = vitals.to;
+var until  = vitals.until;
 
-module.exports = construct();
+// INSERT ./helpers/*.js
+
+module.exports = newOnlyData();
