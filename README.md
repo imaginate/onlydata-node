@@ -10,7 +10,7 @@ npm install onlydata
 ## API
 ```javascript
 
-var od = require('onlydata');
+var onlydata = require('onlydata');
 
 // values
 var str = 'a string of OnlyData syntax';
@@ -20,40 +20,40 @@ var file = 'path/to/file.onlydata';
 // or      'path/to/file.od';
 
 // parse string
-obj = od(str);
-obj = od.parse(str);
-obj = od.parseString(str);
+obj = onlydata(str);
+obj = onlydata.parse(str);
+obj = onlydata.parseString(str);
 
 // parse buffer
-obj = od(buff);
-obj = od.parse(buff);
-obj = od.parseBuffer(buff);
+obj = onlydata(buff);
+obj = onlydata.parse(buff);
+obj = onlydata.parseBuffer(buff);
 
 // parse file
-obj = od(file);
-obj = od.parse(file);
-obj = od.parseFile(file);
+obj = onlydata(file);
+obj = onlydata.parse(file);
+obj = onlydata.parseFile(file);
 
 // get config
-od.getConfig([ ...prop ]); // prop array
-od.getConfig(...prop);     // prop arguments
-od.getConfig();            // all props
+onlydata.getConfig([ ...prop ]); // prop array
+onlydata.getConfig(...prop);     // prop arguments
+onlydata.getConfig();            // all props
 
 // set config
-od.setConfig(propKey, newVal);
-od.setConfig({
+onlydata.setConfig(propKey, newVal);
+onlydata.setConfig({
   propKey: newVal,
   propKey: newVal
 });
 
 // reset config
-od.resetConfig([ ...prop ]); // prop array
-od.resetConfig(...prop);     // prop arguments
-od.resetConfig();            // all props
+onlydata.resetConfig([ ...prop ]); // prop array
+onlydata.resetConfig(...prop);     // prop arguments
+onlydata.resetConfig();            // all props
 
 // make new instance
-od = od.construct();
-od = od.constructor();
+onlydata = onlydata.construct();
+onlydata = onlydata.constructor();
 ```
 
 ## Other Details
