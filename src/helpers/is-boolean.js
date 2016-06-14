@@ -12,16 +12,25 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-'use strict';
-
-var has = require('../../help/vitals').has;
-
-var RE = /^(?:true|false|yes|no)(?:[ \t\v]+#.*)?$/i;
-
 /**
- * @param {string} line
+ * @private
+ * @param {string} val
  * @return {boolean}
  */
-module.exports = function isBoolean(line) {
-  return has(line, RE);
-};
+var isBoolean = (function _build_isBoolean() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var BOOL = /^(?:true|false|yes|no)$/i;
+
+  /**
+   * @param {string} val
+   * @return {boolean}
+   */
+  return function isBoolean(val) {
+    return has(val, BOOL);
+  };
+})();
