@@ -12,6 +12,8 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
+// OUT ../onlydata.js
+
 'use strict';
 
 var vitals = require('node-vitals')('base', 'fs');
