@@ -27,8 +27,6 @@ var parse = (function _build_parse() {
   // INSERT ./skip.js
   // INSERT ./error.js
   // INSERT ./parse.js
-  // INSERT ./parse-key.js
-  // INSERT ./parse-value.js
 
   return init;
 })();
