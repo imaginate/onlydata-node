@@ -34,16 +34,22 @@ obj = od(file);
 obj = od.parse(file);
 obj = od.parseFile(file);
 
+// get config
+od.getConfig([ ...prop ]); // prop array
+od.getConfig(...prop);     // prop arguments
+od.getConfig();            // all props
+
 // set config
-od.setConfig(key, val);
+od.setConfig(propKey, newVal);
 od.setConfig({
-  key: val,
-  key: val
+  propKey: newVal,
+  propKey: newVal
 });
 
 // reset config
-od.resetConfig(...prop);
-od.resetConfig(); // resets all props
+od.resetConfig([ ...prop ]); // prop array
+od.resetConfig(...prop);     // prop arguments
+od.resetConfig();            // all props
 
 // make new instance
 od = od.construct();
