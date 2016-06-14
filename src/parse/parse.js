@@ -36,12 +36,20 @@ function parse() {
 
     if ( !isEqualSign(DATA[$i]) ) throw new Error( err('invalid key assignment') );
 
-    ++$i; // skip equal sign
+    ++$i; // note: skip equal sign
     skipWhitespace();
 
     parseValue();
 
     $map[$key] = $val;
+
+    skipWhitespace();
+    skipComment();
+
+    if ( !isLineBreak(DATA[$i]) ) throw new Error( err('invalid syntax after value') );
+
+    ++$line;
+    ++$i;
   }
 }
 
@@ -74,19 +82,34 @@ function parseValue() {
 
   if ( isLineBreak($char) || isHashMark($char) ) throw new Error( err('missing a value') );
 
-  if ( isQuoteMark($char) ) return parseQuoted();
+  if ( isQuoteMark($char) ) return parseQuoted(); // note: quoted string
   if ( isListOpen($char)  ) return parseList();
   if ( isMapOpen($char)   ) return parseMap();
 
+  // parse: string block
   if ( isLessSign($char) && isLessSign(DATA[$i + 1]) ) {
     return isLessSign(DATA[$i + 2])
       ? parseRawBlock()
       : parseBlock();
   }
 
-  while ($i < LEN) {
+  // parse: basic string, number, boolean, null, import
+
+  $val = $char;
+  while (++$i < LEN) {
 
     $char = DATA[$i];
 
+    if ( isWhitespace($char) ) break;
+    if ( isLineBreak($char)  ) break;
+    if ( isHashMark($char)   ) break;
+
+    $val = fuse.string($val, $char);
   }
+
+  if (      isNull($val)    ) $val = null;
+  else if ( isBoolean($val) ) parseBoolean();
+  else if ( isImport($val)  ) parseImport();
+  else if ( isNumber($val)  ) parseNumber();
+  else parseString();
 }
