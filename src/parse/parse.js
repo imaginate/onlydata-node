@@ -216,3 +216,86 @@ function parseQuoted() {
 
   ++$i; // skip: closing quote mark
 }
+
+/**
+ * Parse a string block.
+ *
+ * @private
+ * @type {function}
+ */
+function parseBlock() {
+
+  /** @type {number} */
+  var LINE;
+  /** @type {string} */
+  var val;
+  /** @type {string} */
+  var ch;
+
+  LINE = $line; // save: starting line number
+
+  $i = $i + 2; // skip: opening less than signs
+
+  skipWhitespace();
+  skipComment();
+
+  if ( !isLineBreak(DATA[$i]) ) throw new Error( err('invalid string block opening') );
+
+  ++$line;
+
+  $val = '';
+
+  main:
+  while (++$i) {
+
+    if ($i >= LEN) {
+      $line = LINE;
+      throw new Error( err('missing closing `>>` for string block') );
+    }
+
+    skipWhitespace();
+    skipComment();
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) {
+      ++$line;
+      continue main;
+    }
+
+    // close: string block
+    if ( isMoreSign($char) && isMoreSign(DATA[$i + 1]) ) break main;
+
+    // save: leading whitespace or greater than sign
+    if ( isBackslash($char) ) {
+      ch = DATA[$i + 1];
+      if ( isWhitespace(ch) || isMoreSign(ch) ) {
+        ++$i; // skip: backslash
+        $char = ch;
+      }
+    }
+
+    val = $char;
+
+    // build: string of remaining line
+    sub:
+    while (++$i) {
+
+      skipComment();
+
+      $char = DATA[$i];
+
+      if ( isLineBreak($char) ) {
+        ++$line;
+        break sub;
+      }
+
+      val = fuse.string(val, $char);
+    }
+
+    val = trimEndWhitespace(val);
+    $val = fuse.string($val, val);
+  }
+
+  $i = $i + 2; // skip: closing greater than signs
+}
