@@ -179,7 +179,7 @@ function parseString() {
     $val = fuse.string($val, $char);
   }
 
-  $val = trimWhitespace($val);
+  $val = trimEndWhitespace($val);
 }
 
 /**
