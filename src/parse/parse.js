@@ -146,3 +146,29 @@ function parseInteger() {
 function parseFloatNum() {
   $val = parseFloat($val);
 }
+
+/**
+ * Parse a basic string.
+ *
+ * @private
+ * @type {function}
+ */
+function parseString() {
+
+  if ( isLineBreak($char) ) return;
+  if ( isHashMark($char)  ) return;
+
+  $val = fuse.string($val, $char);
+
+  while (++$i) {
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char)  ) break;
+    if ( isHashMark($char)   ) break;
+
+    $val = fuse.string($val, $char);
+  }
+
+  $val = trimWhitespace($val);
+}
