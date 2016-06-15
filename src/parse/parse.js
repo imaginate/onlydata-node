@@ -115,3 +115,18 @@ function parseValue() {
   else if ( isFloat($val)   ) parseFloat();
   else parseString();
 }
+
+/**
+ * @private
+ * @type {!RegExp}
+ * @const
+ */
+var TRUE = /^(?:true|yes)$/i;
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseBoolean() {
+  $val = has($val, TRUE);
+}
