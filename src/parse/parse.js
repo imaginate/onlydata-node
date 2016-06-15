@@ -130,3 +130,11 @@ var TRUE = /^(?:true|yes)$/i;
 function parseBoolean() {
   $val = has($val, TRUE);
 }
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseInteger() {
+  $val = parseInt($val);
+}
