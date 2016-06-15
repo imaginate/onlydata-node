@@ -36,7 +36,7 @@ function parse() {
 
     if ( !isEqualSign(DATA[$i]) ) throw new Error( err('invalid key assignment') );
 
-    ++$i; // note: skip equal sign
+    ++$i; // skip: equal sign
     skipWhitespace();
 
     parseValue();
@@ -195,7 +195,7 @@ function parseQuoted() {
 
   QUOTE = $char;
 
-  // note: build the string
+  // build: string
   $val = '';
   while (++$i) {
   
@@ -205,14 +205,14 @@ function parseQuoted() {
 
     if ( same(QUOTE, $char) ) break;
 
-    // note: save escaped quote
+    // save: escaped quote
     if ( isBackslash($char) && same(QUOTE, DATA[$i + 1]) ) {
-      ++$i; // note: skip backslash
+      ++$i; // skip: backslash
       $char = DATA[$i];
     }
 
     $val = fuse.string($val, $char);
   }
 
-  ++$i; // note: skip closing quote mark
+  ++$i; // skip: closing quote mark
 }
