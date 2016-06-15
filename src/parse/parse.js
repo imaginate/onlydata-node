@@ -108,12 +108,13 @@ function parseValue() {
     $val = fuse.string($val, $char);
   }
 
-  if (      isNull($val)    ) parseNull();
-  else if ( isBoolean($val) ) parseBoolean();
-  else if ( isImport($val)  ) parseImport();
-  else if ( isInteger($val) ) parseInteger();
-  else if ( isFloat($val)   ) parseFloatNum();
-  else parseString();
+  if ( isNull($val)    ) return parseNull();
+  if ( isBoolean($val) ) return parseBoolean();
+  if ( isImport($val)  ) return parseImport();
+  if ( isInteger($val) ) return parseInteger();
+  if ( isFloat($val)   ) return parseFloatNum();
+
+  parseString();
 }
 
 /**
