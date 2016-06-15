@@ -112,7 +112,7 @@ function parseValue() {
   else if ( isBoolean($val) ) parseBoolean();
   else if ( isImport($val)  ) parseImport();
   else if ( isInteger($val) ) parseInteger();
-  else if ( isFloat($val)   ) parseFloat();
+  else if ( isFloat($val)   ) parseFloatNum();
   else parseString();
 }
 
@@ -137,4 +137,12 @@ function parseBoolean() {
  */
 function parseInteger() {
   $val = parseInt($val);
+}
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseFloatNum() {
+  $val = parseFloat($val);
 }
