@@ -173,11 +173,46 @@ function parseString() {
 
     $char = DATA[$i];
 
-    if ( isLineBreak($char)  ) break;
-    if ( isHashMark($char)   ) break;
+    if ( isLineBreak($char) ) break;
+    if ( isHashMark($char)  ) break;
 
     $val = fuse.string($val, $char);
   }
 
   $val = trimWhitespace($val);
+}
+
+/**
+ * Parse a quoted string.
+ *
+ * @private
+ * @type {function}
+ */
+function parseQuoted() {
+
+  /** @type {string} */
+  var QUOTE;
+
+  QUOTE = $char;
+
+  // note: build the string
+  $val = '';
+  while (++$i) {
+  
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) throw new Error( err('missing closing quote mark') );
+
+    if ( same(QUOTE, $char) ) break;
+
+    // note: save escaped quote
+    if ( isBackslash($char) && same(QUOTE, DATA[$i + 1]) ) {
+      ++$i; // note: skip backslash
+      $char = DATA[$i];
+    }
+
+    $val = fuse.string($val, $char);
+  }
+
+  ++$i; // note: skip closing quote mark
 }
