@@ -30,6 +30,8 @@ function parseList(inlineOnly) {
     parseMultiList();
   }
   else parseInlineList();
+
+  ++$i; // skip: closing square bracket
 }
 
 /**
@@ -69,8 +71,6 @@ function parseInlineList() {
   }
 
   $val = list;
-
-  ++$i; // skip: closing square bracket
 }
 
 /**
