@@ -299,3 +299,65 @@ function parseBlock() {
 
   $i = $i + 2; // skip: closing greater than signs
 }
+
+/**
+ * Parse a raw string block.
+ *
+ * @private
+ * @type {function}
+ */
+function parseRawBlock() {
+
+  /** @type {number} */
+  var LINE;
+  /** @type {number} */
+  var i;
+
+  LINE = $line; // save: starting line number
+
+  $i = $i + 3; // skip: opening less than signs
+
+  skipWhitespace();
+  skipComment();
+
+  if ( !isLineBreak(DATA[$i]) ) throw new Error( err('invalid raw string block opening') );
+
+  ++$line;
+
+  // build: raw string
+  $val = '';
+  while (++$i) {
+
+    if ($i >= LEN) {
+      $line = LINE;
+      throw new Error( err('missing closing `>>>` for raw string block') );
+    }
+
+    $char = DATA[$i];
+
+    // close: raw string block with leading whitespace
+    if ( isWhitespace($char) ) {
+      i = $i + 1;
+      while ( isWhitespace(DATA[i]) ) ++i;
+      if ( isMoreSign(DATA[i])     &&
+           isMoreSign(DATA[i + 1]) &&
+           isMoreSign(DATA[i + 2]) ) {
+        break;
+      }
+    }
+    // close: raw string block
+    else if ( isMoreSign($char)        &&
+              isMoreSign(DATA[$i + 1]) &&
+              isMoreSign(DATA[$i + 2]) ) {
+      break;
+    }
+    // increment: line number
+    else if ( isLineBreak($char) ) ++$line;
+
+    $val = fuse.string($val, $char);
+  }
+
+  $val = slice.string($val, 0, -1); // trim: line break
+
+  $i = $i + 3; // skip: closing greater than signs
+}
