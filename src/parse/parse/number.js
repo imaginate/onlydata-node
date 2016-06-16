@@ -1,4 +1,3 @@
-// OUT ./index.js
 /**
  * -----------------------------------------------------------------------------
  * OnlyData
@@ -15,19 +14,16 @@
 
 /**
  * @private
- * @param {!Object} config
- * @param {string} data
- * @param {string=} file
- * @return {!Object}
+ * @type {function}
  */
-var parse = (function _build_parse() {
+function parseInteger() {
+  $val = parseInt($val);
+}
 
-  // INSERT ./vars.js
-  // INSERT ./init.js
-  // INSERT ./skip.js
-  // INSERT ./error.js
-  // INSERT ./parse.js
-  // INSERT ./parse/*.js
-
-  return init;
-})();
+/**
+ * @private
+ * @type {function}
+ */
+function parseFloatNum() {
+  $val = parseFloat($val);
+}

@@ -1,4 +1,3 @@
-// OUT ./index.js
 /**
  * -----------------------------------------------------------------------------
  * OnlyData
@@ -15,19 +14,19 @@
 
 /**
  * @private
- * @param {!Object} config
- * @param {string} data
- * @param {string=} file
- * @return {!Object}
+ * @type {function}
  */
-var parse = (function _build_parse() {
+function parseKey() {
 
-  // INSERT ./vars.js
-  // INSERT ./init.js
-  // INSERT ./skip.js
-  // INSERT ./error.js
-  // INSERT ./parse.js
-  // INSERT ./parse/*.js
+  if ( !isOpenKeyChar($char) ) throw new Error( err('invalid open key character') );
 
-  return init;
-})();
+  $key = $char;
+  while (++$i) {
+
+    $char = DATA[$i];
+
+    if ( !isKeyChar($char) ) break;
+
+    $key = fuse.string($key, $char);
+  }
+}
