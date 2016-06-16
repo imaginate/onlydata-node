@@ -228,8 +228,6 @@ function parseBlock() {
   /** @type {number} */
   var LINE;
   /** @type {string} */
-  var val;
-  /** @type {string} */
   var ch;
 
   LINE = $line; // save: starting line number
@@ -243,9 +241,8 @@ function parseBlock() {
 
   ++$line;
 
+  // build: string
   $val = '';
-
-  main:
   while (++$i) {
 
     if ($i >= LEN) {
@@ -260,11 +257,11 @@ function parseBlock() {
 
     if ( isLineBreak($char) ) {
       ++$line;
-      continue main;
+      continue;
     }
 
     // close: string block
-    if ( isMoreSign($char) && isMoreSign(DATA[$i + 1]) ) break main;
+    if ( isMoreSign($char) && isMoreSign(DATA[$i + 1]) ) break;
 
     // save: leading whitespace or greater than sign
     if ( isBackslash($char) ) {
@@ -275,29 +272,40 @@ function parseBlock() {
       }
     }
 
-    val = $char;
-
-    // build: string of remaining line
-    sub:
-    while (++$i) {
-
-      skipComment();
-
-      $char = DATA[$i];
-
-      if ( isLineBreak($char) ) {
-        ++$line;
-        break sub;
-      }
-
-      val = fuse.string(val, $char);
-    }
-
-    val = trimEndWhitespace(val);
-    $val = fuse.string($val, val);
+    parseBlockLine();
   }
 
   $i = $i + 2; // skip: closing greater than signs
+}
+
+/**
+ * Parse a line of a string block.
+ *
+ * @private
+ * @type {function}
+ */
+function parseBlockLine() {
+
+  /** @type {string} */
+  var line;
+
+  // build: line string
+  line = $char;
+  while (++$i) {
+
+    skipComment();
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) break;
+
+    line = fuse.string(line, $char);
+  }
+
+  ++$line;
+
+  line = trimEndWhitespace(line);
+  $val = fuse.string($val, line);
 }
 
 /**
