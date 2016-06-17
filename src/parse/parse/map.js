@@ -40,3 +40,82 @@ function parseMap(inlineOnly) {
 
   ++$i; // skip: closing curly brace
 }
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseInlineMap() {
+
+  /** @type {!Object} */
+  var map;
+
+  map = {};
+
+  while ($i) {
+
+    skipWhitespace();
+
+    $char = DATA[$i];
+
+    if ( isMapClose($char) ) break;
+
+    parseKey();
+    skipWhitespace();
+
+    if ( !isColon(DATA[$i]) ) throw new Error( err('invalid key assignment') );
+
+    ++$i; // skip: colon
+    skipWhitespace();
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) throw new Error( err('missing a map value') );
+    if ( isComma($char)     ) throw new Error( err('missing a map value') );
+
+    if ( isQuoteMark($char) ) parseQuoted();
+    else parseInlineMapValue();
+
+    map[$key] = $val;
+
+    skipWhitespace();
+
+    $char = DATA[$i];
+
+    if ( isMapClose($char) ) break;
+
+    if ( !isComma($char) ) throw new Error( err('missing a comma for inline map') );
+
+    ++$i; // skip: comma
+  }
+
+  $val = map;
+}
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseInlineMapValue() {
+
+  $val = $char;
+  while (++$i) {
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) throw new Error( err('missing closing curly brace for inline map') );
+
+    if ( isWhitespace($char) ) break;
+    if ( isMapClose($char)   ) break;
+    if ( isComma($char)      ) break;
+
+    $val = fuse.string($val, $char);
+  }
+
+  if ( isNull($val)    ) return parseNull();
+  if ( isBoolean($val) ) return parseBoolean();
+  if ( isInteger($val) ) return parseInteger();
+  if ( isFloat($val)   ) return parseFloatNum();
+
+  throw new Error( err('an invalid value for inline map') );
+}
