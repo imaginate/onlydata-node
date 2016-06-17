@@ -14,6 +14,13 @@
 
 /**
  * @private
+ * @type {boolean}
+ * @const
+ */
+var COMMA;
+
+/**
+ * @private
  * @type {!Object}
  * @const
  */
