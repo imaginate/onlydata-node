@@ -68,6 +68,8 @@ function parseInlineList() {
     if ( isListClose($char) ) break;
 
     if ( !isComma($char) ) throw new Error( err('missing a comma for inline list') );
+
+    ++$i; // skip: comma
   }
 
   $val = list;
