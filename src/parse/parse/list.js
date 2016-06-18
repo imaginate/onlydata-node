@@ -149,8 +149,8 @@ function parseMultiList() {
 
     skipWhitespace();
 
-    if (flag) parseMultiListComma();
-    else flag = setMultiListComma();
+    if (flag) parseComma();
+    else flag = setComma();
 
     skipWhitespace();
     skipComment();
@@ -214,41 +214,5 @@ function parseMultiListValue() {
     --$i; // backtrack: line break or hash mark
     while ( isWhitespace(DATA[$i]) ) --$i;
     --$i; // backtrack: comma
-  }
-}
-
-/**
- * @private
- * @return {boolean}
- */
-function setMultiListComma() {
-  COMMA = isComma(DATA[$i]);
-  return true;
-}
-
-/**
- * @private
- * @type {function}
- */
-function parseMultiListComma() {
-
-  /** @type {number} */
-  var i;
-
-  if ( isComma(DATA[$i]) ) {
-    if (!COMMA) throw new Error( err('invalid list comma') );
-  }
-  // check: last value
-  else if (COMMA) {
-
-    // skip: line
-    i = $i + 1;
-    while ( !isLineBreak(DATA[i]) ) ++i;
-    ++i; // skip: line break
-
-    // skip: whitespace
-    while ( isWhitespace(DATA[i]) ) ++i;
-
-    if ( !isListClose(DATA[i]) ) throw new Error( err('invalid list comma') );
   }
 }
