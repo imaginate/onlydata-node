@@ -18,5 +18,5 @@
  * @const
  */
 CONF_VALUES = {
-  'import-base': {}
+  'import-paths': {}
 };

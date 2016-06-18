@@ -18,5 +18,7 @@
  * @const
  */
 CONF_TYPES = {
-  'import-root': is.string
+  'import-paths': function(val) {
+    return is('strings', val);
+  }
 };
