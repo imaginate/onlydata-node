@@ -19,6 +19,6 @@
  */
 CONF_TYPES = {
   'import-paths': function(val) {
-    return is('strings', val);
+    return is('stringMap', val);
   }
 };
