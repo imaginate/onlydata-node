@@ -26,13 +26,13 @@ function setComma() {
  * @private
  * @type {function}
  */
-function parseComma() {
+function parseListComma() {
 
   /** @type {number} */
   var i;
 
   if ( isComma(DATA[$i]) ) {
-    if (!COMMA) throw new Error( err('invalid list/map comma') );
+    if (!COMMA) throw new Error( err('invalid list comma') );
     ++$i; // skip: comma
   }
   // check: last value
@@ -46,6 +46,34 @@ function parseComma() {
     // skip: whitespace
     while ( isWhitespace(DATA[i]) ) ++i;
 
-    if ( !isListClose(DATA[i]) ) throw new Error( err('invalid list/map comma') );
+    if ( !isListClose(DATA[i]) ) throw new Error( err('invalid list comma') );
+  }
+}
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseMapComma() {
+
+  /** @type {number} */
+  var i;
+
+  if ( isComma(DATA[$i]) ) {
+    if (!COMMA) throw new Error( err('invalid map comma') );
+    ++$i; // skip: comma
+  }
+  // check: last value
+  else if (COMMA) {
+
+    // skip: line
+    i = $i + 1;
+    while ( !isLineBreak(DATA[i]) ) ++i;
+    ++i; // skip: line break
+
+    // skip: whitespace
+    while ( isWhitespace(DATA[i]) ) ++i;
+
+    if ( !isMapClose(DATA[i]) ) throw new Error( err('invalid map comma') );
   }
 }

@@ -149,7 +149,7 @@ function parseMultiList() {
 
     skipWhitespace();
 
-    if (flag) parseComma();
+    if (flag) parseListComma();
     else flag = setComma();
 
     skipWhitespace();
