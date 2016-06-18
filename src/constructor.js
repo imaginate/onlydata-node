@@ -77,11 +77,16 @@ var newOnlyData = (function _build_newOnlyData() {
     var onlydata;
     /** @type {!Object} */
     var config;
+    /** @type {string} */
+    var CWD;
 
-    // new config instance
+    // set: current working directory
+    CWD = process.cwd();
+
+    // make: new config instance
     config = copy(CONF_VALUES);
 
-    // new onlydata instance
+    // make: new onlydata instance
     onlydata = function parseOnlyDataBase(content) {
       return parseOnlyData(content);
     };
@@ -153,6 +158,7 @@ var newOnlyData = (function _build_newOnlyData() {
 
       if ( !is.string(content) ) throw new TypeError(ERR_MSG.content);
 
+      prepImportPaths();
       content = normalizeEol(content);
       return parse(config, content);
     }
@@ -168,6 +174,7 @@ var newOnlyData = (function _build_newOnlyData() {
 
       if ( !is.buffer(content) ) throw new TypeError(ERR_MSG.content);
 
+      prepImportPaths();
       content = to.string(content);
       content = normalizeEol(content);
       return parse(config, content);
@@ -188,7 +195,8 @@ var newOnlyData = (function _build_newOnlyData() {
       if ( !is.string(file) ) throw new TypeError(ERR_MSG.file.type);
       if ( !is.file(file)   ) throw new Error(ERR_MSG.file.path);
       if ( !hasOnlyDataExt(file) ) throw new Error(ERR_MSG.file.ext);
-      
+
+      prepImportPaths();
       content = get.file(file, {
         'buffer':   false,
         'encoding': 'utf8',
@@ -308,6 +316,16 @@ var newOnlyData = (function _build_newOnlyData() {
      */
     function resetConfigProps(props) {
       each(props, resetConfigProp);
+    }
+
+    /**
+     * @private
+     * @type {function}
+     */
+    function prepImportPaths() {
+      config['import-paths'] = remap.obj(config['import-paths'], function(path) {
+        return resolvePath(CWD, path);
+      });
     }
   }
 
