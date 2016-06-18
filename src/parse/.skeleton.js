@@ -24,9 +24,9 @@ function parse(config, data, file) {
 
   // INSERT ./vars.js
   // INSERT ./init.js
+  // INSERT ./run.js
   // INSERT ./skip.js
   // INSERT ./error.js
-  // INSERT ./parse.js
   // INSERT ./parse/*.js
 
   init(config, data, file);
