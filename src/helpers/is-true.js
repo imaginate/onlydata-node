@@ -14,8 +14,23 @@
 
 /**
  * @private
- * @type {function}
+ * @param {string} val
+ * @return {boolean}
  */
-function parseBoolean() {
-  $val = isTrue($val);
-}
+var isTrue = (function _build_isTrue() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var TRUE = /^(?:true|yes)$/i;
+
+  /**
+   * @param {string} val
+   * @return {boolean}
+   */
+  return function isTrue(val) {
+    return has(val, TRUE);
+  };
+})();
