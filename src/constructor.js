@@ -324,7 +324,9 @@ var newOnlyData = (function _build_newOnlyData() {
      */
     function prepImportPaths() {
       config['import-paths'] = remap.obj(config['import-paths'], function(path) {
-        return resolvePath(CWD, path);
+        path = resolvePath(CWD, path);
+        if ( !is.dir(path) ) throw new Error( err('invalid import-paths dirpath') );
+        return path;
       });
     }
   }
