@@ -32,6 +32,7 @@ function init(config, data, file) {
   DATA = fuse.string(data, '\n');
   FILE = file;
   LEN  = DATA.length;
+  CWD  = process.cwd();
 
   $line = 1;
   $map  = {};

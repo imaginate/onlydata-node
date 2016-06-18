@@ -42,6 +42,13 @@ var FILE;
 
 /**
  * @private
+ * @type {string}
+ * @const
+ */
+var CWD;
+
+/**
+ * @private
  * @type {number}
  * @const
  */
