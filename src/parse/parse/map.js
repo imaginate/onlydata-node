@@ -119,3 +119,74 @@ function parseInlineMapValue() {
 
   throw new Error( err('an invalid value for inline map') );
 }
+
+/**
+ * @private
+ * @type {function}
+ */
+function parseMultiMap() {
+
+  /** @type {number} */
+  var LINE;
+  /** @type {boolean} */
+  var flag;
+  /** @type {!Object} */
+  var map;
+
+  LINE = $line; // save: starting line number
+
+  ++$line;
+
+  map = {};
+
+  while (++$i) {
+
+    if ($i >= LEN) {
+      $line = LINE;
+      throw new Error( err('missing closing map curly brace') );
+    }
+
+    skipWhitespace();
+    skipComment();
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) {
+      ++$line;
+      continue;
+    }
+
+    if ( isMapClose($char) ) break;
+
+    parseKey();
+    skipWhitespace();
+
+    if ( !isColon(DATA[$i]) ) throw new Error( err('invalid key assignment') );
+
+    ++$i; // skip: colon
+    skipWhitespace();
+
+    $char = DATA[$i];
+
+    if ( isLineBreak($char) ) throw new Error( err('missing a map value') );
+    if ( isComma($char)     ) throw new Error( err('missing a map value') );
+
+    parseNestedValue();
+
+    map[$key] = $val;
+
+    skipWhitespace();
+
+    if (flag) parseMapComma();
+    else flag = setComma();
+
+    skipWhitespace();
+    skipComment();
+
+    if ( !isLineBreak(DATA[$i]) ) throw new Error( err('invalid syntax after map value') );
+
+    ++$line;
+  }
+
+  $val = map;
+}
