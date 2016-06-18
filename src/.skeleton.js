@@ -31,6 +31,8 @@ var slice  = vitals.slice;
 var to     = vitals.to;
 var until  = vitals.until;
 
+var PATH = require('path');
+
 // INSERT ./helpers/*.js
 // INSERT ./config/*.js
 // INSERT ./parse/index.js
