@@ -17,7 +17,6 @@
  * @param {!Object} config
  * @param {string} data
  * @param {string=} file
- * @return {!Object}
  */
 function init(config, data, file) {
 
@@ -38,7 +37,5 @@ function init(config, data, file) {
   $map  = {};
   $i    = 0;
 
-  parse();
-
-  return $map;
+  run();
 }

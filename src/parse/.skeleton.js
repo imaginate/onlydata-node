@@ -20,7 +20,7 @@
  * @param {string=} file
  * @return {!Object}
  */
-var parse = (function _build_parse() {
+function parse(config, data, file) {
 
   // INSERT ./vars.js
   // INSERT ./init.js
@@ -29,5 +29,6 @@ var parse = (function _build_parse() {
   // INSERT ./parse.js
   // INSERT ./parse/*.js
 
-  return init;
-})();
+  init(config, data, file);
+  return $map;
+}

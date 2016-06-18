@@ -16,7 +16,7 @@
  * @private
  * @type {function}
  */
-function parse() {
+function run() {
 
   while ($i < LEN) {
 
