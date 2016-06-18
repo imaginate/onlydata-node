@@ -143,7 +143,7 @@ function parseMultiList() {
 
     if ( isComma($char) ) throw new Error( err('missing a list value') );
 
-    parseMultiListValue();
+    parseNestedValue();
 
     list = fuse.value(list, $val);
 
@@ -161,58 +161,4 @@ function parseMultiList() {
   }
 
   $val = list;
-}
-
-/**
- * @private
- * @type {function}
- */
-function parseMultiListValue() {
-
-  /** @type {number} */
-  var i;
-
-  // parse: quoted string, list, map
-  if ( isQuoteMark($char) ) return parseQuoted();
-  if ( isListOpen($char)  ) return parseList(true);
-  if ( isMapOpen($char)   ) return parseMap(true);
-
-  // error: string block
-  if ( isLessSign($char) && isLessSign(DATA[$i + 1]) ) throw new Error( err('invalid string (nested strings must be inline)') );
-
-  // parse: basic string, number, boolean, null, import
-
-  $val = $char;
-  while (++$i) {
-
-    $char = DATA[$i];
-
-    if ( isWhitespace($char) ) break;
-    if ( isLineBreak($char)  ) break;
-    if ( isHashMark($char)   ) break;
-
-    $val = fuse.string($val, $char);
-  }
-
-  // backtrack and trim: comma
-  if ( isComma(DATA[$i - 1]) ) {
-    --$i;
-    $val = slice.string($val, 0, -1);
-  }
-
-  if ( isNull($val)    ) return parseNull();
-  if ( isBoolean($val) ) return parseBoolean();
-  if ( isImport($val)  ) return parseImport();
-  if ( isInteger($val) ) return parseInteger();
-  if ( isFloat($val)   ) return parseFloatNum();
-
-  parseString();
-
-  // backtrack and trim: comma
-  if ( hasCommaEnd($val) ) {
-    $val = slice.string($val, 0, -1);
-    --$i; // backtrack: line break or hash mark
-    while ( isWhitespace(DATA[$i]) ) --$i;
-    --$i; // backtrack: comma
-  }
 }
