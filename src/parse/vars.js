@@ -45,7 +45,7 @@ var FILE;
  * @type {string}
  * @const
  */
-var CWD;
+var DIR;
 
 /**
  * @private

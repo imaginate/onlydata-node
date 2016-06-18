@@ -30,9 +30,9 @@ function init(config, data, file) {
 
   CONF = config;
   DATA = fuse.string(data, '\n');
-  FILE = file;
+  FILE = file && resolvePath(file);
   LEN  = DATA.length;
-  CWD  = process.cwd();
+  DIR  = FILE && getDirpath(FILE);
 
   $line = 1;
   $map  = {};
