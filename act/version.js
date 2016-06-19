@@ -145,6 +145,7 @@ function insertBadge(filepath, version) {
 
   content = getContent(filepath);
   version = remap(version, /-/, '--'); // dashes must be doubled for badge
+  version = fuse('$1', version);
   content = remap(content, BADGE_VERSION, version);
   to.file(content, filepath);
 }
