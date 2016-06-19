@@ -1,6 +1,6 @@
 {
   "name": "onlydata",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-beta",
   "description": "official OnlyData parser",
   "main": "onlydata.js",
   "repository": {

@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------------------
  * OnlyData
  * -----------------------------------------------------------------------------
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  * @see [OnlyData](http://onlydata.tech)
  *
  * @author Adam Smith <adam@imaginate.life> (https://imaginate.life)
