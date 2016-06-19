@@ -32,6 +32,7 @@ var OUT    = /^[ \t\v]*\/\/[ \t\v]*OUT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
 var INSERT = /^([ \t\v]*\/\/)[ \t\v]*INSERT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
 var INTRO  = /^[\s\S]+\n[ \t\v]*\*\/[ \t\v]*\n/;
 var LINE   = /^[ \t\v]*\S[ \t\v\S]*$/mg;
+var FILES  = /\/*\.js$/;
 
 ////////////////////////////////////////////////////////////
 // EXTERNAL HELPERS
@@ -42,6 +43,7 @@ var cut    = vitals.cut;
 var each   = vitals.each;
 var fuse   = vitals.fuse;
 var get    = vitals.get;
+var has    = vitals.has;
 var is     = vitals.is;
 var remap  = vitals.remap;
 var slice  = vitals.slice;
@@ -138,6 +140,34 @@ function insert(basedir, content) {
   return remap(content, INSERT, function(line, space, file) {
     space = slice(space, 0, -2); // trim: slashes
     file = resolvePath(basedir, file);
+    return has(file, FILES)
+      ? getInserts(file, space)
+      : getInsert(file, space);
+  });
+}
+
+/**
+ * @private
+ * @param {string} path
+ * @param {string} space
+ * @return {string}
+ */
+function getInserts(path, space) {
+
+  /** @type {!Array<string>} */
+  var files;
+  /** @type {string} */
+  var dir;
+
+  dir = getDirpath(path);
+
+  if ( !is.dir(dir) ) throw new Error( fuse('invalid insert dirpath - `', path, '`') );
+
+  files = get.filepaths(dir, {
+    basepath:  true,
+    validExts: 'js'
+  });
+  return roll.up('', files, function(file) {
     return getInsert(file, space);
   });
 }
