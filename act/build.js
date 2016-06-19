@@ -46,6 +46,7 @@ var get    = vitals.get;
 var has    = vitals.has;
 var is     = vitals.is;
 var remap  = vitals.remap;
+var roll   = vitals.roll;
 var slice  = vitals.slice;
 var to     = vitals.to;
 
