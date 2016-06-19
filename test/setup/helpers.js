@@ -15,7 +15,7 @@ global.onlydata = require('../../onlydata');
 global.assert = require('assert');
 global.log = require('log-ocd')();
 
-require('node-vitals')('base', 'fs').makeGlobal();
+require('node-vitals')('base', 'fs').mkGlobal();
 
 log.error.setConfig({
   'logger': logError,
