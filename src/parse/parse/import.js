@@ -79,10 +79,22 @@ function parseImport() {
 
   if ( !is.file(file) ) throw new Error( err('invalid import filepath') );
 
-  $val = get.file(file, {
+  parseFile(file);
+}
+
+/**
+ * @private
+ * @param {string} file
+ */
+function parseFile(file) {
+
+  /** @type {string} */
+  var content;
+
+  content = get.file(file, {
     'buffer':   false,
     'encoding': 'utf8',
     'eol':      'LF'
   });
-  $val = parse(CONFIG, $val, file);
+  $val = parse(CONFIG, content, file);
 }
