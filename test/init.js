@@ -55,7 +55,9 @@ function runTests() {
     basepath: true,
     validExts: 'js'
   });
-  each(tests, mocha.addFile);
+  each(tests, function(file) {
+    mocha.addFile(file);
+  });
 
   try {
     mocha.run(function() {
