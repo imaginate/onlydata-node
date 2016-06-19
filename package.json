@@ -17,6 +17,7 @@
     "node-vitals": "4.x"
   },
   "devDependencies": {
+    "chalk": "1.x",
     "mocha": "2.x",
     "node-act": "1.x",
     "log-ocd": ">1.0.0-beta"
