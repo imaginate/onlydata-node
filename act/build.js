@@ -120,8 +120,8 @@ function getOut(basedir, content) {
 
   outs = get.values(content, OUT);
 
-  if (!out.length) throw new Error('missing out file');
-  if (out.length > 1) throw new Error('multiple out files');
+  if (!outs.length) throw new Error('missing out file');
+  if (outs.length > 1) throw new Error('multiple out files');
 
   out = outs[0];
   out = remap(out, OUT, '$1');
