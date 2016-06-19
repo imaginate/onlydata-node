@@ -13,6 +13,9 @@
     "url": "https://github.com/imaginate/onlydata-node/issues"
   },
   "homepage": "http://onlydata.tech/node",
+  "scripts": {
+    "test": "node ./test/init.js"
+  },
   "dependencies": {
     "node-vitals": "4.x"
   },
