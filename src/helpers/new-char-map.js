@@ -31,7 +31,7 @@ function newCharMap(chars) {
   map = {};
   len = chars.length;
   i = -1;
-  while (++i < length) {
+  while (++i < len) {
     ch = chars[i];
     map[ch] = true;
   }
