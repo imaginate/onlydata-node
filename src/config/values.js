@@ -17,6 +17,6 @@
  * @type {!Object<string, *>}
  * @const
  */
-CONF_VALUES = {
+var CONF_VALUES = {
   'import-paths': {}
 };

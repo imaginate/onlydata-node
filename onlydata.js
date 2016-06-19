@@ -835,7 +835,7 @@ var trimWhitespace = (function _build_trimWhitespace() {
  * @type {!Object<string, function(*): boolean>}
  * @const
  */
-CONF_TYPES = {
+var CONF_TYPES = {
   'import-paths': function(val) {
     return is('stringMap', val);
   }
@@ -846,7 +846,7 @@ CONF_TYPES = {
  * @type {!Object<string, *>}
  * @const
  */
-CONF_VALUES = {
+var CONF_VALUES = {
   'import-paths': {}
 };
 

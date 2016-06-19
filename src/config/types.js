@@ -17,7 +17,7 @@
  * @type {!Object<string, function(*): boolean>}
  * @const
  */
-CONF_TYPES = {
+var CONF_TYPES = {
   'import-paths': function(val) {
     return is('stringMap', val);
   }
