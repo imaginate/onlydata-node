@@ -1,4 +1,4 @@
-# OnlyData Node Parser [![npm version](https://img.shields.io/badge/npm-0.0.1--beta-red.svg?style=flat)](https://www.npmjs.com/package/onlydata)
+# OnlyData Node Parser [![npm version](https://img.shields.io/1.0.0--alpha-brightgreen.svg?style=flat)](https://www.npmjs.com/package/onlydata)
 
 The official [node.js](https://nodejs.org) parser for [OnlyData](http://onlydata.tech), a human-readable data serialization language.
 
