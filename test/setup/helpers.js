@@ -11,6 +11,7 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
+global.onlydata = require('../../onlydata');
 global.assert = require('assert');
 global.log = require('log-ocd')();
 
