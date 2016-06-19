@@ -82,10 +82,10 @@ function update(version) {
   });
 
   file = resolvePath('package.json');
-  insertConfig(file);
+  insertConfig(file, version);
 
   file = resolvePath('README.md');
-  insertBadge(file);
+  insertBadge(file, version);
 }
 
 ////////////////////////////////////////////////////////////
