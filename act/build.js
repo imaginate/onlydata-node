@@ -30,9 +30,9 @@ var SRC   = 'src';
 
 var OUT    = /^[ \t\v]*\/\/[ \t\v]*OUT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
 var INSERT = /^([ \t\v]*\/\/)[ \t\v]*INSERT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
-var INTRO  = /^[\s\S]+\n[ \t\v]*\*\/[ \t\v]*\n/;
+var INTRO  = /^[\s\S]+?\n[ \t\v]*\*\/[ \t\v]*\n\n/;
 var LINE   = /^[ \t\v]*\S[ \t\v\S]*$/mg;
-var FILES  = /\/*\.js$/;
+var FILES  = /\/\*\.js$/;
 
 ////////////////////////////////////////////////////////////
 // EXTERNAL HELPERS
@@ -104,6 +104,7 @@ function buildFrame(frame) {
   });
   out = getOut(basedir, content);
   content = cut(content, OUT);
+  content = trimBreak(content);
   content = insert(basedir, content);
   to.file(content, out);
 }
@@ -206,4 +207,13 @@ function indent(content, space) {
   return space
     ? remap(content, LINE, space)
     : content;
+}
+
+/**
+ * @private
+ * @param {string} content
+ * @return {string}
+ */
+function trimBreak(content) {
+  return cut(content, /^\n/);
 }
