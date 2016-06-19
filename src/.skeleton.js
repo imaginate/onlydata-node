@@ -32,6 +32,8 @@ var to     = vitals.to;
 var until  = vitals.until;
 
 var PATH = require('path');
+var getBasename = PATH.basename;
+var getExtname  = PATH.extname;
 var getDirpath  = PATH.dirname;
 var resolvePath = PATH.resolve;
 
