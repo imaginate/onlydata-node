@@ -75,11 +75,8 @@ function parseImport() {
 
   file = resolvePath(DIR, key, file);
 
-  // **** ADD ASTERISK CHECK HERE ****
-
-  if ( !is.file(file) ) throw new Error( err('invalid import filepath') );
-
-  parseFile(file);
+  if ( isFiles(file) ) parseDir(file);
+  else parseFile(file);
 }
 
 /**
@@ -91,10 +88,48 @@ function parseFile(file) {
   /** @type {string} */
   var content;
 
+  if ( !is.file(file) ) throw new Error( err('invalid import filepath') );
+
   content = get.file(file, {
     'buffer':   false,
     'encoding': 'utf8',
     'eol':      'LF'
   });
   $val = parse(CONFIG, content, file);
+}
+
+/**
+ * @private
+ * @param {string} path
+ */
+function parseDir(path) {
+
+  /** @type {!Array} */
+  var files;
+  /** @type {!Object} */
+  var map;
+  /** @type {string} */
+  var dir;
+  /** @type {string} */
+  var ext;
+  /** @type {string} */
+  var key;
+
+  dir = getDirpath(path);
+  ext = getExtname(path);
+
+  if ( !is.dir(dir) ) throw new Error( err('invalid import dirpath') );
+
+  files = get.filepaths(dir, {
+    'basepath': true,
+    'validExts': ext
+  });
+  map = {};
+  each(files, function(file) {
+    key = getBasename(file, ext);
+    parseFile(file);
+    map[key] = $val;
+  });
+
+  $val = map;
 }
