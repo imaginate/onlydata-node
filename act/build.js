@@ -47,6 +47,7 @@ var has    = vitals.has;
 var is     = vitals.is;
 var remap  = vitals.remap;
 var roll   = vitals.roll;
+var same   = vitals.same;
 var slice  = vitals.slice;
 var to     = vitals.to;
 
@@ -156,8 +157,12 @@ function insert(basedir, content) {
  */
 function getInserts(path, space) {
 
+  /** @type {string} */
+  var content;
   /** @type {!Array<string>} */
   var files;
+  /** @type {number} */
+  var last;
   /** @type {string} */
   var dir;
 
@@ -169,8 +174,12 @@ function getInserts(path, space) {
     basepath:  true,
     validExts: 'js'
   });
-  return roll.up('', files, function(file) {
-    return getInsert(file, space);
+  last = files.length - 1;
+  return roll.up('', files, function(file, i) {
+    content = getInsert(file, space);
+    return same(i, last)
+      ? content
+      : fuse(content, '\n');
   });
 }
 
