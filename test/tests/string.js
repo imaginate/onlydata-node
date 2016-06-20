@@ -32,8 +32,13 @@ suite('string tests', function() {
       assert( map.str === 'easy "quote"' );
     });
 
+    test('backslash', function() {
+      var map = onlydata('str = every\\slash/stays\\');
+      assert( map.str === 'every\\slash/stays\\' );
+    });
+
     test('two strings', function() {
-      var content  = 'str1 = simple\n';
+      var content  = 'str1 = simple \n';
           content += 'str2 = simple';
       var map = onlydata(content);
       assert( map.str1 === 'simple' );
@@ -71,7 +76,7 @@ suite('string tests', function() {
     });
 
     test('two lines', function() {
-      var content  = 'str1 = "simple"\n';
+      var content  = 'str1 = "simple" \n';
           content += "str2 = 'simple'";
       var map = onlydata(content);
       assert( map.str1 === 'simple' );
@@ -79,8 +84,8 @@ suite('string tests', function() {
     });
 
     test('special chars', function() {
-      var content  = 'str1 = "{}"\n';
-          content += 'str2 = "[]"\n';
+      var content  = 'str1 = "{}" \n';
+          content += 'str2 = "[]" \n';
           content += 'str3 = "import"';
       var map = onlydata(content);
       assert( map.str1 === '{}' );
@@ -109,6 +114,26 @@ suite('string tests', function() {
           content += ' >>';
       var map = onlydata(content);
       assert( map.str === '<div><p>simple</p></div>' );
+    });
+
+    test('space', function() {
+      var content  = 'str = <<               \n';
+          content += ' <p>keep mid space</p> \n';
+          content += '>>';
+      var map = onlydata(content);
+      assert( map.str === '<p>keep mid space</p>' );
+    });
+
+    test('backslash', function() {
+      var content  = 'str = <<                \n';
+          content += '\\ <div>                \n';
+          content += '\\  <p>mid\\slash\\</p> \n';
+          content += '\\ </div>               \n';
+          content += '\\ >>                   \n';
+          content += '\\>>                    \n';
+          content += '>>';
+      var map = onlydata(content);
+      assert( map.str === ' <div>  <p>mid\\slash\\</p> </div> >>>>' );
     });
 
   });
