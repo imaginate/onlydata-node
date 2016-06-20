@@ -37,6 +37,11 @@ suite('string tests', function() {
       assert( map.str === 'every\\slash/stays\\' );
     });
 
+    test('comment', function() {
+      var map = onlydata('str = simple # comment');
+      assert( map.str === 'simple' );
+    });
+
     test('two strings', function() {
       var content  = 'str1 = simple \n';
           content += 'str2 = simple';
@@ -58,6 +63,11 @@ suite('string tests', function() {
     test('plain (double quote)', function() {
       var map = onlydata('str = "simple"');
       assert( map.str === 'simple' );
+    });
+
+    test('comment', function() {
+      var map = onlydata("str = 'simple # keep' # trim");
+      assert( map.str === 'simple # keep' );
     });
 
     test('whitespace', function() {
@@ -124,6 +134,15 @@ suite('string tests', function() {
       assert( map.str === '<p>keep mid space</p>' );
     });
 
+    test('comment', function() {
+      var content  = 'str = <<        \n';
+          content += ' # trim         \n';
+          content += '<p>comments</p> \n';
+          content += '>>';
+      var map = onlydata(content);
+      assert( map.str === '<p>comments</p>' );
+    });
+
     test('backslash', function() {
       var content  = 'str = <<                \n';
           content += '\\ <div>                \n';
@@ -168,6 +187,17 @@ suite('string tests', function() {
           content += '>>>';
       var map = onlydata(content);
       assert( map.str === ' <p>keep all space</p> ' );
+    });
+
+    test('comment', function() {
+      var content  = 'str = <<<       \n';
+          content += ' # keep         \n';
+          content += '<p>comments</p> \n';
+          content += '>>>';
+      var map = onlydata(content);
+      var result  = ' # keep         \n';
+          result += '<p>comments</p> ';
+      assert( map.str === result );
     });
 
     test('backslash', function() {
