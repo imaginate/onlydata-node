@@ -16,6 +16,16 @@
  * @private
  * @type {function}
  */
+function parseNumber() {
+  if ( isInteger($val) ) return parseInteger();
+  if ( isFloat($val)   ) return parseFloatNum();
+  throw new Error( err('invalid number') );
+}
+
+/**
+ * @private
+ * @type {function}
+ */
 function parseInteger() {
   $val = cutNumHelpers($val);
   $val = parseInt($val);
