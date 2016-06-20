@@ -14,10 +14,32 @@
 
 suite('string tests', function() {
 
-  test('basic string', function() {
-    var content = 'str = simple';
-    var map = onlydata(content);
-    assert( map.str === 'simple' );
+
+  suite('basic strings', function() {
+
+    test('plain', function() {
+      var map = onlydata('str = simple');
+      assert( map.str === 'simple' );
+    });
+
+    test('apostrophe', function() {
+      var map = onlydata("str = apostrophe's");
+      assert( map.str === "apostrophe's" );
+    });
+
+    test('quotes', function() {
+      var map = onlydata('str = easy "quote"');
+      assert( map.str === 'easy "quote"' );
+    });
+
+    test('two strings', function() {
+      var content  = 'str1 = simple\n';
+          content += 'str2 = simple';
+      var map = onlydata(content);
+      assert( map.str1 === 'simple' );
+      assert( map.str2 === 'simple' );
+    });
+
   });
 
 });
