@@ -138,4 +138,46 @@ suite('string tests', function() {
 
   });
 
+
+  suite('raw string blocks', function() {
+
+    test('plain', function() {
+      var content  = 'str = <<<      \n';
+          content += '<p>simple</p>  \n';
+          content += '>>>';
+      var map = onlydata(content);
+      assert( map.str === '<p>simple</p>  ' );
+    });
+
+    test('trim', function() {
+      var content  = 'str = <<<         \n';
+          content += '\t<div>           \n';
+          content += '    <p>simple</p> \n';
+          content += '\v</div>          \n';
+          content += ' >>> ';
+      var map = onlydata(content);
+      var result  = '\t<div>           \n';
+          result += '    <p>simple</p> \n';
+          result += '\v</div>          ';
+      assert( map.str === result );
+    });
+
+    test('space', function() {
+      var content  = 'str = <<<              \n';
+          content += ' <p>keep all space</p> \n';
+          content += '>>>';
+      var map = onlydata(content);
+      assert( map.str === ' <p>keep all space</p> ' );
+    });
+
+    test('backslash', function() {
+      var content  = 'str = <<<           \n';
+          content += '\\ <p>\\slash\\</p> \n';
+          content += '>>>';
+      var map = onlydata(content);
+      assert( map.str === '\\ <p>\\slash\\</p> ' );
+    });
+
+  });
+
 });
