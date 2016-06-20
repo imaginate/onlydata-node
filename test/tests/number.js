@@ -35,7 +35,7 @@ suite('number tests', function() {
     test('commas', function() {
       var map = onlydata('num = 1,000,000');
       assert( map.num === 1000000 );
-      assert.throw(function() {
+      assert.throws(function() {
         onlydata('num = 1,0,0,0');
       }, Error);
     });
@@ -43,7 +43,7 @@ suite('number tests', function() {
     test('underscores', function() {
       var map = onlydata('num = 1_000_000');
       assert( map.num === 1000000 );
-      assert.throw(function() {
+      assert.throws(function() {
         onlydata('num = 1_0_0_0');
       }, Error);
     });
