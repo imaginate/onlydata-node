@@ -42,4 +42,52 @@ suite('string tests', function() {
 
   });
 
+
+  suite('quoted strings', function() {
+
+    test('plain (single quote)', function() {
+      var map = onlydata("str = 'simple'");
+      assert( map.str === 'simple' );
+    });
+
+    test('plain (double quote)', function() {
+      var map = onlydata('str = "simple"');
+      assert( map.str === 'simple' );
+    });
+
+    test('whitespace', function() {
+      var map = onlydata("str = ' simple '");
+      assert( map.str === ' simple ' );
+    });
+
+    test('backslash', function() {
+      var map = onlydata("str = 'apostrophe\\'s'");
+      assert( map.str === "apostrophe's" );
+    });
+
+    test('inside quotes', function() {
+      var map = onlydata('str = \'easy "quote"\'');
+      assert( map.str === 'easy "quote"' );
+    });
+
+    test('two lines', function() {
+      var content  = 'str1 = "simple"\n';
+          content += "str2 = 'simple'";
+      var map = onlydata(content);
+      assert( map.str1 === 'simple' );
+      assert( map.str2 === 'simple' );
+    });
+
+    test('special chars', function() {
+      var content  = 'str1 = "{}"\n';
+          content += 'str2 = "[]"\n';
+          content += 'str3 = "import"';
+      var map = onlydata(content);
+      assert( map.str1 === '{}' );
+      assert( map.str2 === '[]' );
+      assert( map.str3 === 'import' );
+    });
+
+  });
+
 });
