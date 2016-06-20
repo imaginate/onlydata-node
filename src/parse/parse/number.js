@@ -17,6 +17,7 @@
  * @type {function}
  */
 function parseInteger() {
+  $val = cutNumHelpers($val);
   $val = parseInt($val);
 }
 
@@ -25,5 +26,6 @@ function parseInteger() {
  * @type {function}
  */
 function parseFloatNum() {
+  $val = cutNumHelpers($val);
   $val = parseFloat($val);
 }

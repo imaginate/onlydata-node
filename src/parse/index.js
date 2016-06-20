@@ -757,6 +757,7 @@ function parse(config, data, file) {
    * @type {function}
    */
   function parseInteger() {
+    $val = cutNumHelpers($val);
     $val = parseInt($val);
   }
 
@@ -765,6 +766,7 @@ function parse(config, data, file) {
    * @type {function}
    */
   function parseFloatNum() {
+    $val = cutNumHelpers($val);
     $val = parseFloat($val);
   }
 

@@ -38,6 +38,30 @@ var resolvePath = PATH.resolve;
 
 /**
  * @private
+ * @param {string} num
+ * @return {string}
+ */
+var cutNumHelpers = (function _build_cutNumHelpers() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var REGEX = /[,_]/g;
+
+  /**
+   * @param {string} num
+   * @return {string}
+   */
+  return function cutNumHelpers(num) {
+    REGEX.lastIndex = 0;
+    return cut(num, REGEX);
+  };
+})();
+
+/**
+ * @private
  * @param {string} str
  * @return {boolean}
  */
@@ -1595,6 +1619,7 @@ function parse(config, data, file) {
    * @type {function}
    */
   function parseInteger() {
+    $val = cutNumHelpers($val);
     $val = parseInt($val);
   }
 
@@ -1603,6 +1628,7 @@ function parse(config, data, file) {
    * @type {function}
    */
   function parseFloatNum() {
+    $val = cutNumHelpers($val);
     $val = parseFloat($val);
   }
 
