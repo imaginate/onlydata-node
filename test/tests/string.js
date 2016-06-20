@@ -94,18 +94,18 @@ suite('string tests', function() {
   suite('string blocks', function() {
 
     test('plain', function() {
-      var content  = 'str = <<\n';
-          content += '<p>simple</p>';
+      var content  = 'str = <<      \n';
+          content += '<p>simple</p> \n';
           content += '>>';
       var map = onlydata(content);
       assert( map.str === '<p>simple</p>' );
     });
 
     test('trim', function() {
-      var content  = 'str = << \n';
-          content += '\t<div>';
-          content += '    <p>simple</p>';
-          content += '\v</div>';
+      var content  = 'str = <<          \n';
+          content += '\t<div>           \n';
+          content += '    <p>simple</p> \n';
+          content += '\v</div>          \n';
           content += ' >>';
       var map = onlydata(content);
       assert( map.str === '<div><p>simple</p></div>' );
