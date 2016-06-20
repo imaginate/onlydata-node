@@ -1800,6 +1800,7 @@ function parse(config, data, file) {
         if ( isMoreSign(DATA[i])     &&
              isMoreSign(DATA[i + 1]) &&
              isMoreSign(DATA[i + 2]) ) {
+          $i = i;
           break;
         }
       }
