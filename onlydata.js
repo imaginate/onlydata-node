@@ -629,6 +629,29 @@ var isNull = (function _build_isNull() {
 
 /**
  * @private
+ * @param {string} val
+ * @return {boolean}
+ */
+var isNumber = (function _build_isNumber() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var NUM = /[+-]?[0-9][0-9_,]*(?:\.[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_,]*)?/;
+
+  /**
+   * @param {string} val
+   * @return {boolean}
+   */
+  return function isNumber(val) {
+    return has(val, NUM);
+  };
+})();
+
+/**
+ * @private
  * @param {string} ch - one character
  * @return {boolean}
  */
@@ -1618,6 +1641,16 @@ function parse(config, data, file) {
    * @private
    * @type {function}
    */
+  function parseNumber() {
+    if ( isInteger($val) ) return parseInteger();
+    if ( isFloat($val)   ) return parseFloatNum();
+    throw new Error( err('invalid number') );
+  }
+
+  /**
+   * @private
+   * @type {function}
+   */
   function parseInteger() {
     $val = cutNumHelpers($val);
     $val = parseInt($val);
@@ -1886,8 +1919,7 @@ function parse(config, data, file) {
     if ( isNull($val)    ) return parseNull();
     if ( isBoolean($val) ) return parseBoolean();
     if ( isImport($val)  ) return parseImport();
-    if ( isInteger($val) ) return parseInteger();
-    if ( isFloat($val)   ) return parseFloatNum();
+    if ( isNumber($val)  ) return parseNumber();
 
     parseString();
   }
@@ -1932,8 +1964,7 @@ function parse(config, data, file) {
     if ( isNull($val)    ) return parseNull();
     if ( isBoolean($val) ) return parseBoolean();
     if ( isImport($val)  ) return parseImport();
-    if ( isInteger($val) ) return parseInteger();
-    if ( isFloat($val)   ) return parseFloatNum();
+    if ( isNumber($val)  ) return parseNumber();
 
     parseString();
 

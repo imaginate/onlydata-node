@@ -756,6 +756,16 @@ function parse(config, data, file) {
    * @private
    * @type {function}
    */
+  function parseNumber() {
+    if ( isInteger($val) ) return parseInteger();
+    if ( isFloat($val)   ) return parseFloatNum();
+    throw new Error( err('invalid number') );
+  }
+
+  /**
+   * @private
+   * @type {function}
+   */
   function parseInteger() {
     $val = cutNumHelpers($val);
     $val = parseInt($val);
@@ -1024,8 +1034,7 @@ function parse(config, data, file) {
     if ( isNull($val)    ) return parseNull();
     if ( isBoolean($val) ) return parseBoolean();
     if ( isImport($val)  ) return parseImport();
-    if ( isInteger($val) ) return parseInteger();
-    if ( isFloat($val)   ) return parseFloatNum();
+    if ( isNumber($val)  ) return parseNumber();
 
     parseString();
   }
@@ -1070,8 +1079,7 @@ function parse(config, data, file) {
     if ( isNull($val)    ) return parseNull();
     if ( isBoolean($val) ) return parseBoolean();
     if ( isImport($val)  ) return parseImport();
-    if ( isInteger($val) ) return parseInteger();
-    if ( isFloat($val)   ) return parseFloatNum();
+    if ( isNumber($val)  ) return parseNumber();
 
     parseString();
 

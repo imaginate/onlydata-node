@@ -51,8 +51,7 @@ function parseValue() {
   if ( isNull($val)    ) return parseNull();
   if ( isBoolean($val) ) return parseBoolean();
   if ( isImport($val)  ) return parseImport();
-  if ( isInteger($val) ) return parseInteger();
-  if ( isFloat($val)   ) return parseFloatNum();
+  if ( isNumber($val)  ) return parseNumber();
 
   parseString();
 }
@@ -97,8 +96,7 @@ function parseNestedValue() {
   if ( isNull($val)    ) return parseNull();
   if ( isBoolean($val) ) return parseBoolean();
   if ( isImport($val)  ) return parseImport();
-  if ( isInteger($val) ) return parseInteger();
-  if ( isFloat($val)   ) return parseFloatNum();
+  if ( isNumber($val)  ) return parseNumber();
 
   parseString();
 
