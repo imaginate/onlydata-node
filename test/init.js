@@ -20,6 +20,7 @@ var each = vitals.each;
 var fuse = vitals.fuse;
 var get  = vitals.get;
 
+var cd = process.chdir;
 var log = require('log-ocd')();
 var Mocha = require('mocha');
 var resolvePath = require('path').resolve;
@@ -30,6 +31,7 @@ log.error.setConfig({
 });
 
 require('./setup');
+cd(__dirname);
 runTests();
 
 /**
