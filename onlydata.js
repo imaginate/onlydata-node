@@ -2294,7 +2294,7 @@ var newOnlyData = (function _build_newOnlyData() {
     function prepImportPaths() {
       config['import-paths'] = remap.obj(config['import-paths'], function(path) {
         path = resolvePath(CWD, path);
-        if ( !is.dir(path) ) throw new Error( err('invalid import-paths dirpath') );
+        if ( !is.dir(path) ) throw new Error( fuse('invalid import-paths dirpath in config, `', path, '`') );
         return path;
       });
     }
