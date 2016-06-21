@@ -113,8 +113,6 @@ function parse(config, data, file) {
     if ( !is.str(data)   ) throw new TypeError('invalid type for `data` param');
     if ( !is.str(file)   ) throw new TypeError('invalid type for `file` param');
 
-    if ( isContentEmpty(data) ) return {};
-
     CONF = config;
     DATA = fuse.string(data, '\n');
     FILE = file && resolvePath(file);
@@ -125,7 +123,7 @@ function parse(config, data, file) {
     $map  = {};
     $i    = 0;
 
-    run();
+    if ( !isContentEmpty(data) ) run();
   }
 
   /**
