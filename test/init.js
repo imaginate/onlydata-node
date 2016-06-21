@@ -52,7 +52,7 @@ function runTests() {
   mocha.reporter('specky');
   mocha.ui('onlydata');
 
-  dir = resolvePath('test/tests');
+  dir = resolvePath('tests');
   tests = get.filepaths(dir, {
     basepath: true,
     validExts: 'js'
