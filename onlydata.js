@@ -1212,8 +1212,9 @@ function parse(config, data, file) {
         if ( isSlash($char) ) break;
         key = fuse.string(key, $char);
       }
-      if ( !has(CONFIG['import-paths'], key) ) throw new Error( err('invalid import-paths key') );
+      if ( !has(CONF['import-paths'], key) ) throw new Error( err('invalid import-paths key') );
       ++i; // skip: slash
+      key = CONF['import-paths'][key];
       file = slice.string(file, i);
     }
 
