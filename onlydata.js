@@ -1019,17 +1019,24 @@ function parse(config, data, file) {
    */
   function init(config, data, file) {
 
+    /** @type {string} */
+    var cwd;
+
     file = file || '';
 
     if ( !is.obj(config) ) throw new TypeError('invalid type for `config` param');
     if ( !is.str(data)   ) throw new TypeError('invalid type for `data` param');
     if ( !is.str(file)   ) throw new TypeError('invalid type for `file` param');
 
+    cwd = config['cwd'] || process.cwd();
+
     CONF = config;
     DATA = fuse.string(data, '\n');
-    FILE = file && resolvePath(file);
+    FILE = file && resolvePath(cwd, file);
     LEN  = DATA.length;
-    DIR  = FILE && getDirpath(FILE);
+    DIR  = FILE
+      ? getDirpath(FILE)
+      : cwd;
 
     $line = 1;
     $map  = {};
