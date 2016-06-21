@@ -85,6 +85,29 @@ var hasCommaEnd = (function _build_hasCommaEnd() {
 
 /**
  * @private
+ * @param {string} content
+ * @return {boolean}
+ */
+var hasLineBreak = (function _build_hasLineBreak() {
+
+  /**
+   * @private
+   * @type {!RegExp}
+   * @const
+   */
+  var REGEX = /[\r\n]/;
+
+  /**
+   * @param {string} content
+   * @return {boolean}
+   */
+  return function hasLineBreak(content) {
+    return has(content, REGEX);
+  };
+})();
+
+/**
+ * @private
  * @param {string} file
  * @return {boolean}
  */
@@ -2110,9 +2133,11 @@ var newOnlyData = (function _build_newOnlyData() {
 
       if ( !is.string(content) ) throw new TypeError(ERR_MSG.content);
 
-      return is.file(content)
-        ? parseOnlyDataFile(content)
-        : parseOnlyDataString(content);
+      return has(content, '=') || hasLineBreak(content)
+        ? parseOnlyDataString(content)
+        : hasOnlyDataExt(content)
+          ? parseOnlyDataFile(content)
+          : parseOnlyDataString(content);
     }
 
     /**
@@ -2159,9 +2184,15 @@ var newOnlyData = (function _build_newOnlyData() {
 
       /** @type {string} */
       var content;
+      /** @type {string} */
+      var cwd;
 
       if ( !is.string(file) ) throw new TypeError(ERR_MSG.file.type);
-      if ( !is.file(file)   ) throw new Error(ERR_MSG.file.path);
+
+      cwd = config['cwd'] || process.cwd();
+      file = resolvePath(cwd, file);
+
+      if ( !is.file(file)        ) throw new Error(ERR_MSG.file.path);
       if ( !hasOnlyDataExt(file) ) throw new Error(ERR_MSG.file.ext);
 
       prepImportPaths();
