@@ -1,0 +1,21 @@
+
+map1 = { str : "s", num : 100, nil : null, }
+map2 = { str: 's', num: 100, nil: null }
+map3 = {
+  str:  string
+  num:  1,000
+  bool: true
+  none: null
+  map:  { key: 1, }
+  list: [ 1, 2, 3 ]
+}
+map4 = {
+  key1: 1,
+  key2: 2,
+  key3: 3,
+}
+map5 = {
+  key1: 1,
+  key2: 2,
+  key3: 3
+}

@@ -1,0 +1,30 @@
+
+str1 = simple string
+
+str2 = enjoy "unencumbered quoting"
+str3 = "clarify strings by wrapping"
+
+str4 = fearlessly feel unescaped's power
+str5 = 'safely embrace escaped\'s comfort'
+
+str6 = " keep your space bro "
+str7 = '# no comment needed'
+str8 = '[ special chars ]'
+
+str9 = <<
+  # trim ${comments} ${whitespace} ${line-breaks}
+  <div>
+    <h1>Be Blocky</h1>
+    <p>Lorem ipsum madness!</p>
+  </div>
+>>
+str10 = <<<
+  <h2>Raw Power</h2>
+  <ol>
+    <li>I am keeping your comments!</li>
+    <li># Why?</li>
+    <li>Because I want to.</li>
+    <li># Ok</li>
+    <li>And your whitespace too.</li>
+  </ol>
+>>>

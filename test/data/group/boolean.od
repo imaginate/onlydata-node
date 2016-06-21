@@ -1,0 +1,10 @@
+
+bool1 = yes
+bool2 = true
+bool3 = True
+bool4 = TRUE
+
+bool5 = no
+bool6 = false
+bool7 = False
+bool8 = FALSE

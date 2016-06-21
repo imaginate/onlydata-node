@@ -1,0 +1,21 @@
+
+list1 = [ "s", 100, yes, ]
+list2 = [ 's', 100, no   ]
+list3 = [
+  string
+  1,000
+  true
+  null
+  { key: 1, }
+  [ 1, 2, 3 ]
+]
+list4 = [
+  1,
+  2,
+  3,
+]
+list5 = [
+  1,
+  2,
+  3
+]
