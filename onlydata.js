@@ -885,6 +885,9 @@ var trimWhitespace = (function _build_trimWhitespace() {
 var CONF_TYPES = {
   'import-paths': function(val) {
     return is('stringMap', val);
+  },
+  'cwd': function(val) {
+    return is('?string=', val);
   }
 };
 
@@ -894,7 +897,8 @@ var CONF_TYPES = {
  * @const
  */
 var CONF_VALUES = {
-  'import-paths': {}
+  'import-paths': {},
+  'cwd': null
 };
 
 /**

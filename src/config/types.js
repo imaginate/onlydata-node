@@ -20,5 +20,8 @@
 var CONF_TYPES = {
   'import-paths': function(val) {
     return is('stringMap', val);
+  },
+  'cwd': function(val) {
+    return is('?string=', val);
   }
 };

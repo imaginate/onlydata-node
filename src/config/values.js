@@ -18,5 +18,6 @@
  * @const
  */
 var CONF_VALUES = {
-  'import-paths': {}
+  'import-paths': {},
+  'cwd': null
 };
