@@ -234,7 +234,7 @@ function parse(config, data, file) {
     else if (COMMA) {
 
       // skip: line
-      i = $i + 1;
+      i = $i;
       while ( !isLineBreak(DATA[i]) ) ++i;
       ++i; // skip: line break
 
@@ -262,7 +262,7 @@ function parse(config, data, file) {
     else if (COMMA) {
 
       // skip: line
-      i = $i + 1;
+      i = $i;
       while ( !isLineBreak(DATA[i]) ) ++i;
       ++i; // skip: line break
 
