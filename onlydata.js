@@ -2050,11 +2050,6 @@ var newOnlyData = (function _build_newOnlyData() {
     var onlydata;
     /** @type {!Object} */
     var config;
-    /** @type {string} */
-    var CWD;
-
-    // set: current working directory
-    CWD = process.cwd();
 
     // make: new config instance
     config = copy(CONF_VALUES);
@@ -2296,8 +2291,13 @@ var newOnlyData = (function _build_newOnlyData() {
      * @type {function}
      */
     function prepImportPaths() {
+
+      /** @type {string} */
+      var cwd;
+
+      cwd = config['cwd'] || process.cwd();
       config['import-paths'] = remap.obj(config['import-paths'], function(path) {
-        path = resolvePath(CWD, path);
+        path = resolvePath(cwd, path);
         if ( !is.dir(path) ) throw new Error( fuse('invalid import-paths dirpath in config, `', path, '`') );
         return path;
       });
