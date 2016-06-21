@@ -356,7 +356,7 @@ function parse(config, data, file) {
       'encoding': 'utf8',
       'eol':      'LF'
     });
-    $val = parse(CONFIG, content, file);
+    $val = parse(CONF, content, file);
   }
 
   /**
