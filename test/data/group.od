@@ -1,1 +1,1 @@
-import ./group/*.od
+group = import ./group/*.od
