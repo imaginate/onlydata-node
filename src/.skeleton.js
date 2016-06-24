@@ -1,4 +1,3 @@
-// OUT ../onlydata.js
 /**
  * -----------------------------------------------------------------------------
  * OnlyData
@@ -39,7 +38,7 @@ var resolvePath = PATH.resolve;
 
 // INSERT ./helpers/*.js
 // INSERT ./config/*.js
-// INSERT ./parse/index.js
+// INSERT ./parse/.skeleton.js
 // INSERT ./constructor.js
 
 module.exports = newOnlyData();
