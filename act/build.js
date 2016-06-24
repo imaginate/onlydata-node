@@ -22,23 +22,11 @@ exports['desc'] = 'build from source';
 exports['method'] = build;
 
 ////////////////////////////////////////////////////////////
-// CONSTANTS
-////////////////////////////////////////////////////////////
-
-var FRAME = '.skeleton.js';
-var SRC   = 'src';
-
-var OUT    = /^[ \t\v]*\/\/[ \t\v]*OUT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
-var INSERT = /^([ \t\v]*\/\/)[ \t\v]*INSERT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
-var INTRO  = /^[\s\S]+?\n[ \t\v]*\*\/[ \t\v]*\n\n/;
-var LINE   = /^[ \t\v]*\S[ \t\v\S]*$/mg;
-var FILES  = /\/\*\.js$/;
-
-////////////////////////////////////////////////////////////
-// EXTERNAL HELPERS
+// HELPERS
 ////////////////////////////////////////////////////////////
 
 var vitals = require('node-vitals')('base', 'fs');
+var copy   = vitals.copy;
 var cut    = vitals.cut;
 var each   = vitals.each;
 var fuse   = vitals.fuse;
@@ -51,9 +39,33 @@ var same   = vitals.same;
 var slice  = vitals.slice;
 var to     = vitals.to;
 
-var PATH = require('path');
-var getDirpath  = PATH.dirname;
-var resolvePath = PATH.resolve;
+var path = require('path');
+var dirname = path.dirname;
+var resolve = path.resolve;
+
+////////////////////////////////////////////////////////////
+// CONSTANTS
+////////////////////////////////////////////////////////////
+
+// project root directory - absolute path
+var ROOT = resolve(__dirname, '..');
+
+// define main project files - absolute path
+var SRC  = resolve(ROOT, 'src/.frame.js');
+var DEST = resolve(ROOT, 'dist/onlydata.js');
+
+// match inserts - regexp
+var INSERT = /^([ \t\v]*\/\/)[ \t\v]*INSERT[ \t\v]+(\S+\.js)[ \t\v]*$/mg;
+
+// match special insert file patterns - regexp
+var FRAME = /\/\.frame\.js$/;
+var FILES = /\/\*\.js$/;
+
+// match intro file comments - regexp
+var INTRO = /^[\s\S]+?\n[ \t\v]*\*\/[ \t\v]*\n\n/;
+
+// match every line - regexp
+var LINES = /^[ \t\v]*\S[ \t\v\S]*$/mg;
 
 ////////////////////////////////////////////////////////////
 // PUBLIC METHODS
@@ -65,19 +77,11 @@ var resolvePath = PATH.resolve;
  */
 function build() {
 
-  /** @type {!Array<string>} */
-  var frames;
   /** @type {string} */
-  var src;
+  var content;
 
-  src = resolvePath(SRC);
-  frames = get.filepaths(src, {
-    basepath:   true,
-    recursive:  true,
-    validFiles: FRAME
-  });
-  frames = frames.reverse();
-  each(frames, buildFrame);
+  content = buildFrame(SRC);
+  to.file(content, DEST);
 }
 
 ////////////////////////////////////////////////////////////
@@ -87,100 +91,59 @@ function build() {
 /**
  * @private
  * @param {string} frame
+ * @return {string}
  */
 function buildFrame(frame) {
 
   /** @type {string} */
   var content;
   /** @type {string} */
-  var basedir;
-  /** @type {string} */
-  var out;
+  var base;
 
-  basedir = getDirpath(frame);
-  content = get.file(frame, {
-    'buffer':   false,
-    'encoding': 'utf8',
-    'eol':      'LF'
-  });
-  out = getOut(basedir, content);
-  content = cut(content, OUT);
-  content = trimBreak(content);
-  content = insert(basedir, content);
-  to.file(content, out);
+  base    = dirname(frame);
+  content = getContent(frame);
+  return insert(base, content);
 }
 
 /**
  * @private
- * @param {string} basedir
+ * @param {string} base
  * @param {string} content
  * @return {string}
  */
-function getOut(basedir, content) {
+function insert(base, content) {
 
-  /** @type {!Array<string>} */
-  var outs;
-  /** @type {string} */
-  var out;
+  /** @type {!RegExp} */
+  var regex;
 
-  outs = get.values(content, OUT);
-
-  if (!outs.length) throw new Error('missing out file');
-  if (outs.length > 1) throw new Error('multiple out files');
-
-  out = outs[0];
-  out = remap(out, OUT, '$1');
-  return resolvePath(basedir, out);
-}
-
-/**
- * @private
- * @param {string} basedir
- * @param {string} content
- * @return {string}
- */
-function insert(basedir, content) {
-  return remap(content, INSERT, function(line, space, file) {
+  regex = copy(INSERT); // avoid lastIndex errors
+  return remap(content, regex, function(line, space, path) {
+    path  = resolve(base, path);
     space = slice(space, 0, -2); // trim: slashes
-    file = resolvePath(basedir, file);
-    return has(file, FILES)
-      ? getInserts(file, space)
-      : getInsert(file, space);
+    return isFrame(path)
+      ? insertFrame(path, space)
+      : isFiles(path)
+        ? insertFiles(path, space)
+        : insertFile(path, space);
   });
 }
 
 /**
  * @private
- * @param {string} path
+ * @param {string} frame
  * @param {string} space
  * @return {string}
  */
-function getInserts(path, space) {
+function insertFrame(frame, space) {
 
   /** @type {string} */
   var content;
-  /** @type {!Array<string>} */
-  var files;
-  /** @type {number} */
-  var last;
-  /** @type {string} */
-  var dir;
 
-  dir = getDirpath(path);
+  if ( !is.file(frame) ) throw new Error( fuse('invalid insert filepath - `', frame, '`') );
 
-  if ( !is.dir(dir) ) throw new Error( fuse('invalid insert dirpath - `', path, '`') );
-
-  files = get.filepaths(dir, {
-    basepath:  true,
-    validExts: 'js'
-  });
-  last = files.length - 1;
-  return roll.up('', files, function(file, i) {
-    content = getInsert(file, space);
-    return same(i, last)
-      ? content
-      : fuse(content, '\n');
-  });
+  content = buildFrame(file);
+  content = cut(content, INTRO);
+  return indent(content, space);
 }
 
 /**
@@ -189,20 +152,47 @@ function getInserts(path, space) {
  * @param {string} space
  * @return {string}
  */
-function getInsert(file, space) {
+function insertFile(file, space) {
 
   /** @type {string} */
   var content;
 
   if ( !is.file(file) ) throw new Error( fuse('invalid insert filepath - `', file, '`') );
 
-  content = get.file(file, {
-    'buffer':   false,
-    'encoding': 'utf8',
-    'eol':      'LF'
-  });
+  content = getContent(file);
   content = cut(content, INTRO);
   return indent(content, space);
+}
+
+/**
+ * @private
+ * @param {string} path
+ * @param {string} space
+ * @return {string}
+ */
+function insertFiles(path, space) {
+
+  /** @type {string} */
+  var content;
+  /** @type {!Array<string>} */
+  var files;
+  /** @type {string} */
+  var dir;
+
+  dir = dirname(path);
+
+  if ( !is.dir(dir) ) throw new Error( fuse('invalid insert dirpath - `', path, '`') );
+
+  files = get.filepaths(dir, {
+    basepath:  true,
+    recursive: false,
+    validExts: 'js'
+  });
+  content = roll.up('', files, function(file) {
+    content = insertFile(file, space);
+    return fuse(content, '\n');
+  });
+  return slice(content, 0, -1); // trim: last line break
 }
 
 /**
@@ -214,15 +204,37 @@ function getInsert(file, space) {
 function indent(content, space) {
   space = space && fuse(space, '$&');
   return space
-    ? remap(content, LINE, space)
+    ? remap(content, LINES, space)
     : content;
 }
 
 /**
  * @private
- * @param {string} content
+ * @param {string} file
  * @return {string}
  */
-function trimBreak(content) {
-  return cut(content, /^\n/);
+function getContent(file) {
+  return get.file(file, {
+    'buffer':   false,
+    'encoding': 'utf8',
+    'eol':      'LF'
+  });
+}
+
+/**
+ * @private
+ * @param {string} file
+ * @return {boolean}
+ */
+function isFrame(content) {
+  return has(content, FRAME);
+}
+
+/**
+ * @private
+ * @param {string} file
+ * @return {boolean}
+ */
+function isFiles(content) {
+  return has(content, FILES);
 }
