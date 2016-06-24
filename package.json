@@ -2,7 +2,7 @@
   "name": "onlydata",
   "version": "1.0.0",
   "description": "official OnlyData parser",
-  "main": "onlydata.js",
+  "main": "dist/onlydata.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/imaginate/onlydata-node.git"
