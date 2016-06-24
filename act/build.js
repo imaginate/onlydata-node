@@ -141,7 +141,7 @@ function insertFrame(frame, space) {
 
   if ( !is.file(frame) ) throw new Error( fuse('invalid insert filepath - `', frame, '`') );
 
-  content = buildFrame(file);
+  content = buildFrame(frame);
   content = cut(content, INTRO);
   return indent(content, space);
 }
