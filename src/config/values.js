@@ -19,5 +19,5 @@
  */
 var CONF_VALUES = {
   'import-paths': {},
-  'cwd': null
+  'cwd': ''
 };

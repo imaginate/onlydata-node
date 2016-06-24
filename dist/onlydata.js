@@ -902,16 +902,56 @@ var trimWhitespace = (function _build_trimWhitespace() {
 
 /**
  * @private
- * @type {!Object<string, function(*): boolean>}
+ * @type {!Object<string, function>}
  * @const
  */
-var CONF_TYPES = {
-  'import-paths': function(val) {
-    return is('stringMap', val);
+var CONF_SETTERS = {
+
+  /**
+   * @private
+   * @param {!Object} config
+   * @param {?Object<string, string>=} val
+   */
+  'import-paths': function(config, val) {
+
+    /** @type {string} */
+    var cwd;
+
+    if ( !is('?stringMap=', val) ) throw new TypeError('invalid `import-paths` value');
+
+    if (val) {
+      cwd = config['cwd'] || process.cwd();
+      val = remap(val, function(path) {
+        path = resolvePath(cwd, path);
+        if ( is.dir(path) ) return path;
+        else throw new Error( fuse('invalid `import-paths` dirpath - `', path, '`') );
+      });
+    }
+
+    config['import-paths'] = val || {};
   },
-  'cwd': function(val) {
-    return is('?string=', val);
+
+  /**
+   * @private
+   * @param {!Object} config
+   * @param {?string=} val
+   */
+  'cwd': function(config, val) {
+
+    /** @type {string} */
+    var cwd;
+
+    if ( !is('?string=', val) ) throw new TypeError('invalid `cwd` value');
+
+    if (val) {
+      cwd = config['cwd'] || process.cwd();
+      val = resolvePath(cwd, val);
+      if ( !is.dir(val) ) throw new Error( fuse('invalid `cwd` dirpath - `', val, '`') );
+    }
+
+    config['cwd'] = val || '';
   }
+
 };
 
 /**
@@ -921,7 +961,7 @@ var CONF_TYPES = {
  */
 var CONF_VALUES = {
   'import-paths': {},
-  'cwd': null
+  'cwd': ''
 };
 
 /**
@@ -2057,10 +2097,8 @@ var newOnlyData = (function _build_newOnlyData() {
     },
     'set': {
       'key':  'invalid `prop` param (must be a config key name)',
-      'val':  'invalid type for `val` param',
       'type': 'invalid type for `props` param',
       'keys': 'invalid prop key in `props` obj (must be config key names)',
-      'vals': 'invalid type for a prop value in `props` obj'
     },
     'reset': {
       'type': 'invalid type for `prop` param',
@@ -2082,7 +2120,7 @@ var newOnlyData = (function _build_newOnlyData() {
     var config;
 
     // make: new config instance
-    config = copy(CONF_VALUES);
+    config = copy(CONF_VALUES, true);
 
     // make: new onlydata instance
     onlydata = function parseOnlyDataBase(content) {
@@ -2158,7 +2196,6 @@ var newOnlyData = (function _build_newOnlyData() {
 
       if ( !is.string(content) ) throw new TypeError(ERR_MSG.content);
 
-      prepImportPaths();
       content = normalizeEol(content);
       return parse(config, content);
     }
@@ -2174,7 +2211,6 @@ var newOnlyData = (function _build_newOnlyData() {
 
       if ( !is.buffer(content) ) throw new TypeError(ERR_MSG.content);
 
-      prepImportPaths();
       content = to.string(content);
       content = normalizeEol(content);
       return parse(config, content);
@@ -2202,7 +2238,6 @@ var newOnlyData = (function _build_newOnlyData() {
       if ( !is.file(file)        ) throw new Error(ERR_MSG.file.path);
       if ( !hasOnlyDataExt(file) ) throw new Error(ERR_MSG.file.ext);
 
-      prepImportPaths();
       content = get.file(file, {
         'buffer':   false,
         'encoding': 'utf8',
@@ -2218,7 +2253,7 @@ var newOnlyData = (function _build_newOnlyData() {
      * @return {!Object} - A clone of the OnlyData instance's config.
      */
     function getConfig() {
-      return copy.object(config, true);
+      return copy(config, true);
     }
 
     /**
@@ -2231,7 +2266,7 @@ var newOnlyData = (function _build_newOnlyData() {
     function getConfigProp(prop) {
 
       if ( !is.string(prop) ) throw new TypeError(CONF_ERR_MSG.get.type);
-      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.get.key);
+      if ( !has(CONF_VALUES, prop) ) throw new Error(CONF_ERR_MSG.get.key);
 
       return copy(config[prop], true);
     }
@@ -2266,9 +2301,8 @@ var newOnlyData = (function _build_newOnlyData() {
     function setConfigProp(prop, val) {
 
       if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.set.key);
-      if ( !CONF_TYPES[prop](val) ) throw new TypeError(CONF_ERR_MSG.set.val);
 
-      config[prop] = val;
+      CONF_SETTERS[prop](config, val);
     }
 
     /**
@@ -2282,10 +2316,8 @@ var newOnlyData = (function _build_newOnlyData() {
       if ( !is.object(props) ) throw new TypeError(CONF_ERR_MSG.set.type);
 
       each(props, function(val, prop) {
-        if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.set.keys);
-        if ( !CONF_TYPES[prop](val) ) throw new TypeError(CONF_ERR_MSG.set.vals);
-
-        config[prop] = val;
+        if ( !has(CONF_VALUES, prop) ) throw new Error(CONF_ERR_MSG.set.keys);
+        CONF_SETTERS[prop](config, val);
       });
     }
 
@@ -2296,7 +2328,7 @@ var newOnlyData = (function _build_newOnlyData() {
      * @type {function}
      */
     function resetConfig() {
-      config = fuse(config, CONF_VALUES);
+      config = copy(CONF_VALUES, true);
     }
 
     /**
@@ -2308,9 +2340,9 @@ var newOnlyData = (function _build_newOnlyData() {
     function resetConfigProp(prop) {
 
       if ( !is.string(prop) ) throw new TypeError(CONF_ERR_MSG.reset.type);
-      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.reset.key);
+      if ( !has(CONF_VALUES, prop) ) throw new Error(CONF_ERR_MSG.reset.key);
 
-      config[prop] = CONF_VALUES[prop];
+      config[prop] = copy(CONF_VALUES[prop], true);
     }
 
     /**
@@ -2322,23 +2354,6 @@ var newOnlyData = (function _build_newOnlyData() {
      */
     function resetConfigProps(props) {
       each(props, resetConfigProp);
-    }
-
-    /**
-     * @private
-     * @type {function}
-     */
-    function prepImportPaths() {
-
-      /** @type {string} */
-      var cwd;
-
-      cwd = config['cwd'] || process.cwd();
-      config['import-paths'] = remap.obj(config['import-paths'], function(path) {
-        path = resolvePath(cwd, path);
-        if ( !is.dir(path) ) throw new Error( fuse('invalid import-paths dirpath in config, `', path, '`') );
-        return path;
-      });
     }
   }
 
