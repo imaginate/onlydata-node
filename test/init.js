@@ -3,7 +3,7 @@
  * OnlyData
  * -----------------------------------------------------------------------------
  * @file Initializes the tests. Use `$ npm test` to access this file.
- * @version 1.0.0
+ * @version 1.0.1
  * @see [OnlyData](http://onlydata.tech)
  *
  * @author Adam Smith <adam@imaginate.life> (https://imaginate.life)
