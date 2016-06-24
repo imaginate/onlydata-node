@@ -38,7 +38,7 @@ var resolvePath = PATH.resolve;
 
 // INSERT ./helpers/*.js
 // INSERT ./config/*.js
-// INSERT ./parse/.skeleton.js
+// INSERT ./parse/.frame.js
 // INSERT ./constructor.js
 
 module.exports = newOnlyData();
