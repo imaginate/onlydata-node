@@ -257,7 +257,7 @@ var newOnlyData = (function _build_newOnlyData() {
      */
     function setConfigProp(prop, val) {
 
-      if ( !has(CONF_TYPES, prop) ) throw new Error(CONF_ERR_MSG.set.key);
+      if ( !has(CONF_VALUES, prop) ) throw new Error(CONF_ERR_MSG.set.key);
 
       CONF_SETTERS[prop](config, val);
     }
