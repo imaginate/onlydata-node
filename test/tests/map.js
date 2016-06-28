@@ -160,9 +160,10 @@ suite('map tests', function() {
           content += '  language-in: ECMASCRIPT5_STRICT \n';
           content += '}                                   ';
       var map = onlydata(content);
-      assert( map['disable'] === false );
-      assert( map['externs'] === false );
-      assert( map['language-in'] === 'ECMASCRIPT5_STRICT' );
+      assert( is.object(map.map) );
+      assert( map.map['disable'] === false );
+      assert( map.map['externs'] === false );
+      assert( map.map['language-in'] === 'ECMASCRIPT5_STRICT' );
     });
 
   });
