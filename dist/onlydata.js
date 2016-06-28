@@ -662,7 +662,7 @@ var isNumber = (function _build_isNumber() {
    * @type {!RegExp}
    * @const
    */
-  var NUM = /[+-]?[0-9][0-9_,]*(?:\.[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_,]*)?/;
+  var NUM = /^[+-]?[0-9][0-9_,]*(?:\.[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_,]*)?$/;
 
   /**
    * @param {string} val
