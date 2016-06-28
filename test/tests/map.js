@@ -153,6 +153,18 @@ suite('map tests', function() {
       }, Error);
     });
 
+    test('issue #1', function() {
+      var content  = 'map = {                           \n';
+          content += '  disable: no                     \n';
+          content += '  externs: no                     \n';
+          content += '  language-in: ECMASCRIPT5_STRICT \n';
+          content += '}                                   ';
+      var map = onlydata(content);
+      assert( map['disable'] === false );
+      assert( map['externs'] === false );
+      assert( map['language-in'] === 'ECMASCRIPT5_STRICT' );
+    });
+
   });
 
 
