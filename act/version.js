@@ -23,15 +23,6 @@ exports['value'] = 'x.x.x-pre.x';
 exports['method'] = update;
 
 ////////////////////////////////////////////////////////////
-// CONSTANTS
-////////////////////////////////////////////////////////////
-
-var SEMANTIC = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?$/;
-var ALL_VERSION = /\b(v?)[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?\b/g;
-var CONF_VERSION = /("version": ")[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?/;
-var BADGE_VERSION = /(badge\/npm-)[0-9]+\.[0-9]+\.[0-9]+(?:--[a-z]+\.?[0-9]*)?/;
-
-////////////////////////////////////////////////////////////
 // EXTERNAL HELPERS
 ////////////////////////////////////////////////////////////
 
@@ -44,8 +35,23 @@ var is     = vitals.is;
 var remap  = vitals.remap;
 var to     = vitals.to;
 
-var PATH = require('path');
-var resolvePath = PATH.resolve;
+var log = require('log-ocd')();
+
+var path = require('path');
+var resolve = path.resolve;
+
+////////////////////////////////////////////////////////////
+// CONSTANTS
+////////////////////////////////////////////////////////////
+
+var ROOT = resolve(__dirname, '..');
+
+var VERSION = {
+  'SEMANTIC': /^[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?$/,
+  'DEFAULT': /\b(v?)[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?\b/g,
+  'CONFIG': /("version": ")[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z]+\.?[0-9]*)?/,
+  'BADGE': /(badge\/npm-)[0-9]+\.[0-9]+\.[0-9]+(?:--[a-z]+\.?[0-9]*)?/
+};
 
 ////////////////////////////////////////////////////////////
 // PUBLIC METHODS
@@ -61,13 +67,10 @@ function update(version) {
   var files;
   /** @type {string} */
   var file;
-  /** @type {string} */
-  var dir;
 
-  if ( !isSemVersion(version) ) throw new Error('invalid value (must be a semantic version)');
+  if ( !isSemantic(version) ) throw new Error('invalid `version` value (must be semantic version)');
 
-  dir = resolvePath('.');
-  files = get.filepaths(dir, {
+  files = get.filepaths(ROOT, {
     basepath:  true,
     recursive: true,
     validExts: 'js',
@@ -81,11 +84,13 @@ function update(version) {
     insertVersion(file, version);
   });
 
-  file = resolvePath('package.json');
+  file = resolve(ROOT, 'package.json');
   insertConfig(file, version);
 
-  file = resolvePath('README.md');
+  file = resolve(ROOT, 'README.md');
   insertBadge(file, version);
+
+  log.pass('Completed `version` task');
 }
 
 ////////////////////////////////////////////////////////////
@@ -97,8 +102,8 @@ function update(version) {
  * @param {string} version
  * @return {boolean}
  */
-function isSemVersion(version) {
-  return !!version && has(version, SEMANTIC);
+function isSemantic(version) {
+  return !!version && has(version, VERSION.SEMANTIC);
 }
 
 /**
@@ -113,7 +118,7 @@ function insertVersion(filepath, version) {
 
   content = getContent(filepath);
   version = fuse('$1', version);
-  content = remap(content, ALL_VERSION, version);
+  content = remap(content, VERSION.DEFAULT, version);
   to.file(content, filepath);
 }
 
@@ -129,7 +134,7 @@ function insertConfig(filepath, version) {
 
   content = getContent(filepath);
   version = fuse('$1', version);
-  content = remap(content, CONF_VERSION, version);
+  content = remap(content, VERSION.CONFIG, version);
   to.file(content, filepath);
 }
 
@@ -146,7 +151,7 @@ function insertBadge(filepath, version) {
   content = getContent(filepath);
   version = remap(version, /-/, '--'); // dashes must be doubled for badge
   version = fuse('$1', version);
-  content = remap(content, BADGE_VERSION, version);
+  content = remap(content, VERSION.BADGE, version);
   to.file(content, filepath);
 }
 
