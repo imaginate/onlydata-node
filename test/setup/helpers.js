@@ -11,8 +11,19 @@
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  */
 
-global.onlydata = require('../../dist/onlydata.js');
-global.assert = require('assert');
+var fs = require('fs');
+global.mkdir = fs.mkdirSync;
+global.mv    = fs.renameSync;
+global.rm    = fs.unlinkSync;
+global.rmdir = fs.rmdirSync;
+
+global.resolve = require('path').resolve;
+global.assert  = require('assert');
+
+var base = resolve(__dirname, '../../');
+var path = resolve(base, 'dist/onlydata.js');
+global.onlydata = require(path);
+
 global.log = require('log-ocd')();
 
 require('node-vitals')('base', 'fs').mkGlobal();
