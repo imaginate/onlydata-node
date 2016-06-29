@@ -39,6 +39,8 @@ var same   = vitals.same;
 var slice  = vitals.slice;
 var to     = vitals.to;
 
+var log = require('log-ocd')();
+
 var path = require('path');
 var dirname = path.dirname;
 var resolve = path.resolve;
@@ -82,6 +84,7 @@ function build() {
 
   content = buildFrame(SRC);
   to.file(content, DEST);
+  log.pass('Completed `build` task');
 }
 
 ////////////////////////////////////////////////////////////
