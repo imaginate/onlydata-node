@@ -5,11 +5,11 @@
  * @see [OnlyData](http://onlydata.tech)
  *
  * @author Adam Smith <adam@imaginate.life> (https://imaginate.life)
- * @copyright 2016 Adam A Smith <adam@imaginate.life> (https://imaginate.life)
+ * @copyright 2017 Adam A Smith <adam@imaginate.life> (https://imaginate.life)
  *
  * Copyright Notice:
  * The below code is a modified version of the Mocha [bdd interface](https://github.com/mochajs/mocha/blob/master/lib/interfaces/bdd.js).
- * @copyright 2016 TJ Holowaychuk <tj@vision-media.ca>
+ * @copyright 2017 TJ Holowaychuk <tj@vision-media.ca>
  */
 
 'use strict';

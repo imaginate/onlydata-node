@@ -5,14 +5,14 @@
  * @see [OnlyData](http://onlydata.tech)
  *
  * @author Adam Smith <adam@imaginate.life> (https://imaginate.life)
- * @copyright 2016 Adam A Smith <adam@imaginate.life> (https://imaginate.life)
+ * @copyright 2017 Adam A Smith <adam@imaginate.life> (https://imaginate.life)
  *
  * @see [JSDoc3](http://usejsdoc.org)
  * @see [Closure Compiler JSDoc Syntax](https://developers.google.com/closure/compiler/docs/js-for-compiler)
  *
  * Copyright Notice:
  * The below code is a modified version of the Mocha [spec reporter](https://github.com/mochajs/mocha/blob/master/lib/reporters/spec.js).
- * @copyright 2016 TJ Holowaychuk <tj@vision-media.ca>
+ * @copyright 2017 TJ Holowaychuk <tj@vision-media.ca>
  */
 
 'use strict';
