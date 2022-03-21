@@ -7,12 +7,12 @@
     "type": "git",
     "url": "https://github.com/imaginate/onlydata-node.git"
   },
-  "author": "Adam Smith <adam@imaginate.life> (https://imaginate.life)",
+  "author": "Adam Smith <imagineadamsmith@gmail.com> (https://github.com/imaginate)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/imaginate/onlydata-node/issues"
   },
-  "homepage": "http://onlydata.tech/node",
+  "homepage": "https://github.com/imaginate/onlydata-node",
   "scripts": {
     "test": "node ./test/init.js"
   },

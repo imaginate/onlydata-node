@@ -2,10 +2,10 @@
  * -----------------------------------------------------------------------------
  * OnlyData
  * -----------------------------------------------------------------------------
- * @see [OnlyData](http://onlydata.tech)
+ * @see [OnlyData](https://github.com/imaginate/onlydata)
  *
- * @author Adam Smith <adam@imaginate.life> (https://imaginate.life)
- * @copyright 2017 Adam A Smith <adam@imaginate.life> (https://imaginate.life)
+ * @author Adam Smith <imagineadamsmith@gmail.com> (https://github.com/imaginate)
+ * @copyright 2022 Adam A Smith <imagineadamsmith@gmail.com> (https://github.com/imaginate)
  *
  * Copyright Notice:
  * The below code is a modified version of the Mocha [bdd interface](https://github.com/mochajs/mocha/blob/master/lib/interfaces/bdd.js).

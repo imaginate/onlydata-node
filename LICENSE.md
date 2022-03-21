@@ -1,6 +1,6 @@
-## [OnlyData Node Parser](http://onlydata.tech/node) License
+## [OnlyData Node Parser](https://github.com/imaginate/onlydata-node) License
 
-**Copyright 2017 Adam A Smith ([imaginate.life](http://imaginate.life))**
+**Copyright 2022 Adam A Smith ([github.com/imaginate](https://github.com/imaginate))**
 
 Licensed under the **Apache License**, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

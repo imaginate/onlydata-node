@@ -1,6 +1,6 @@
 # OnlyData Node Parser [![build status](https://travis-ci.org/imaginate/onlydata-node.svg?branch=master)](https://travis-ci.org/imaginate/onlydata-node) [![npm version](https://img.shields.io/badge/npm-1.0.4-brightgreen.svg?style=flat)](https://www.npmjs.com/package/onlydata)
 
-The official [node.js](https://nodejs.org) parser for [OnlyData](http://onlydata.tech), a human-readable data serialization language.
+The official [node.js](https://nodejs.org) parser for [OnlyData](https://github.com/imaginate/onlydata), a human-readable data serialization language.
 
 ## Install
 ```bash
@@ -59,4 +59,4 @@ onlydata = onlydata.constructor();
 ## Other Details
 **contributing:** [see contributing guide](https://github.com/imaginate/onlydata-node/blob/master/CONTRIBUTING.md)<br>
 **bugs/improvements:** [open an issue](https://github.com/imaginate/onlydata-node/issues)<br>
-**questions:** adam@imaginate.life
+**questions:** imagineadamsmith@gmail.com
